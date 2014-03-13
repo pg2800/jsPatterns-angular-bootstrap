@@ -16,23 +16,23 @@
 
 	.config(["$routeProvider", function($routeProvider){
 		$routeProvider.when("/", {
-			templateUrl: "../views/home.html",
+			templateUrl: "views/home.html",
 			controller: "HomeController"
 		})
 		.when("/search_filter", {
-			templateUrl: "../views/searchFilter.html",
+			templateUrl: "views/searchFilter.html",
 			controller: "SearchFilterController"
 		})
 		.when("/shapes_canvas", {
-			templateUrl: "../views/shapesCanvas.html",
+			templateUrl: "views/shapesCanvas.html",
 			controller: "ShapesCanvasController"
 		})
 		.when("/history_stack", {
-			templateUrl: "../views/historyStack.html",
+			templateUrl: "views/historyStack.html",
 			controller: "HistoryStackController"
 		})
 		.otherwise({
-			templateUrl: "../views/home.html",
+			templateUrl: "views/home.html",
 			controller: "HomeController"
 		});
 	}]);
