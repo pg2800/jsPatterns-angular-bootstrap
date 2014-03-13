@@ -1,0 +1,9 @@
+.top-by-5px {
+	margin-top: 5px;
+}
+div#cities {
+	min-height: 150px;
+}
+.overflow {
+	overflow: auto;
+}
