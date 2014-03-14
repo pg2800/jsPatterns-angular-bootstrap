@@ -1,16 +1,30 @@
 <div class="row">
-	<div class="col-sm-5">
+	<div class="col-sm-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">Exercise 2</div>
 			<div class="panel-body text-justify">
 				<p>
-					Using Canvas, create a UI that will allow the user to insert shapes such as squares and circles into the canvas and move them around when clicking on them again. The user must have at least two choices for figures. When the user clicks on the canvas area, the selected action must be performed. Selected actions include: insert selected figure into the clicked location; if the user clicked on where a figure is already located, they must be able to drag it and change its position
+					Using Canvas, create a UI that will allow the user to insert shapes such as squares and circles into the canvas and move them around when clicking on them again.
+					<ul class="list-group">
+						<li class="list-group-item">The user must have at least two choices for figures.</li>
+						<li class="list-group-item">When the user clicks on the canvas area, the selected action must be performed.</li>
+						<li class="list-group-item">
+							<p>Selected actions include:</p>
+							<p>1. Insert selected figure into the clicked location.</p>
+							<p>2. If the user clicked on where a figure is already located, they must be able to drag it and change its position.</p>
+						</li>
+					</ul>
 				</p>
 				<p> <strong>Patterns suggested:</strong> observer, factory, constructor, prototype, interface </p>
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-7">
-		<canvas class="form-control height-300px"> </canvas>
+	<div class="col-sm-8">
+		<h2>Using only JavaScript - might not work with phones</h2>
+		<h3>Click the figure you want to add to the canvas</h3>
+		<canvas id="theCanvas" class="form-control height-300px"></canvas>
+		<h2>Using more smooth technologies</h2>
+		<h3>Click the figure you want to add to the canvas</h3>
+		<canvas id="theCanvas" class="form-control height-300px"></canvas>
 	</div>
 </div>
