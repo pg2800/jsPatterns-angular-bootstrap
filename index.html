@@ -36,10 +36,10 @@
 					<!-- Collect the nav links, forms, and other content for toggling -->
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul id="menuLinks" class="nav navbar-nav">
-							<li><a href="#" data-meta="home">Home</a></li>
-							<li><a href="#/search_filter" data-meta="searchFilter">Search Filter</a></li>
-							<li><a href="#/shapes_canvas" data-meta="shapesCanvas">Shapes UI with Canvas</a></li>
-							<li><a href="#/history_stack" data-meta="historyStack">History Stack</a></li>
+							<li><a href="#" data-meta="home" data-toggle="collapse" data-target=".navbar-collapse">Home</a></li>
+							<li><a href="#/search_filter" data-meta="searchFilter" data-toggle="collapse" data-target=".navbar-collapse">Search Filter</a></li>
+							<li><a href="#/shapes_canvas" data-meta="shapesCanvas" data-toggle="collapse" data-target=".navbar-collapse">Shapes UI with Canvas</a></li>
+							<li><a href="#/history_stack" data-meta="historyStack" data-toggle="collapse" data-target=".navbar-collapse">History Stack</a></li>
 						</ul>
 					</div><!-- /.navbar-collapse -->
 				</div><!-- /.container-fluid -->
@@ -60,6 +60,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.1/angular-route.min.js"></script>
 
 	<!-- Your site's scripts goes here -->
+	<script type="text/javascript" src="js/calculatedStyles.js"></script>
 	<script type="text/javascript" src="js/customEventHandler.js"></script>
 	<script type="text/javascript" src="js/initialize.js"></script>
 	<script type="text/javascript" src="presenters/home.js"></script>
