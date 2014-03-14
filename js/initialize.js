@@ -43,11 +43,10 @@
  		});
  	});
 
-	Subscribing Canvas from shapesCanvas View to rezise the canvas.
+	// Subscribing Canvas from shapesCanvas View to rezise the canvas.
 	({}).subscribe("shapesCanvas", function(){
 		addEvent(window, "resize", handler);
 		function handler(){
-			console.log("HOLAAA");
 			var canvasContainers = document.getElementsByClassName("canvasContainer");
 			var theCanvas = document.getElementById("theCanvasJS");
 			if(!theCanvas) {
