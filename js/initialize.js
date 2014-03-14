@@ -48,15 +48,22 @@
 		addEvent(window, "resize", handler);
 		function handler(){
 			var canvasContainers = document.getElementsByClassName("canvasContainer");
-			var theCanvas = document.getElementById("theCanvasJS");
-			if(!theCanvas) {
-				removeHandler(); 
-				return;
-			}
-			var canvasHeight = getComputedStylePropertyValue(theCanvas, "height");
-			Object.keys(canvasContainers).forEach(function(key){
-				if(!(canvasContainers[key] instanceof HTMLElement)) return;
-				$(canvasContainers[key]).css("height", canvasHeight);
+			if(canvasContainers.length<1) return;
+			Object.keys(canvasContainers).forEach(function (key){
+				if(!(canvasContainers[key] instanceof HTMLElement))return;
+				var canvasContainer = canvasContainers[key], 
+				canvasID = canvasContainer.getAttribute("data-canvasID"),
+				height = Number(($(canvasContainer).css("height")).replace(/px$/,"")),
+				width = Number(($(canvasContainer).css("width")).replace(/px$/,""));
+				if(!canvasID || !height || !width) return;
+				$(canvasContainer).children("canvas").remove(); // remove children
+				var canvas = document.createElement("canvas");
+				canvas.setAttribute("id", canvasID);
+				canvas.setAttribute("height", (height-3)+"px");
+				canvas.setAttribute("width", (width-5)+"px");
+				$(canvas).css("margin-left", "-12px");
+				$(canvas).css("margin-top", "-7px");
+				canvasContainer.appendChild(canvas);
 			});
 		}
 		function removeHandler(){
@@ -65,4 +72,5 @@
 		}
 		handler();
 	});
+
 })(jQuery);

@@ -3,6 +3,15 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 	return {
 		run: function(){
 
+			//must be at the beginning
+			publish("shapesCanvas");
+
+
+			// factory of shapes
+
+			// mediator
+			// to tell which one has been clicked and also update whatever it needs to update
+
 			//get a reference to the canvas
 			var ctx = document.getElementById("theCanvasJS").getContext("2d");
 
@@ -24,7 +33,6 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 
 
 
-			publish("shapesCanvas");
 
 		}
 	};
