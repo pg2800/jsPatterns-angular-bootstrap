@@ -30,14 +30,40 @@
 		});
 	})();
 
+	// Subscribers
 	var links = $("#menuLinks a");
 	Object.keys(links).forEach(function (key){
 		var link = links[key], reference;
 		if(!(link instanceof HTMLElement)) return;
 		reference = link.getAttribute("data-meta");
-		link.subscribe(reference, function(){
-			$("#menuLinks .active").attr("class", "");
-			$(link).parent().attr("class", "active");
-		});
+ 		// Subscribing links for selected menu link 
+ 		link.subscribe(reference, function(){
+ 			$("#menuLinks .active").attr("class", "");
+ 			$(link).parent().attr("class", "active");
+ 		});
+ 	});
+
+	Subscribing Canvas from shapesCanvas View to rezise the canvas.
+	({}).subscribe("shapesCanvas", function(){
+		addEvent(window, "resize", handler);
+		function handler(){
+			console.log("HOLAAA");
+			var canvasContainers = document.getElementsByClassName("canvasContainer");
+			var theCanvas = document.getElementById("theCanvasJS");
+			if(!theCanvas) {
+				removeHandler(); 
+				return;
+			}
+			var canvasHeight = getComputedStylePropertyValue(theCanvas, "height");
+			Object.keys(canvasContainers).forEach(function(key){
+				if(!(canvasContainers[key] instanceof HTMLElement)) return;
+				$(canvasContainers[key]).css("height", canvasHeight);
+			});
+		}
+		function removeHandler(){
+			removeEvent(window, "resize", handler);
+			return true;
+		}
+		handler();
 	});
 })(jQuery);
