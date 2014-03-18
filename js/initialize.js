@@ -1,4 +1,8 @@
 (function($){
+	// Observer:
+	$('.nav a').on('click', function(){
+		$(".navbar-toggle").click();
+	});
 	// Publish && Subscribe
 	(function(){
 		var topics = {};

@@ -3,43 +3,59 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 	return {
 		run: function(){
 
-			//must be at the beginning
-
-
 			// factory of shapes
-			var shapesCommandRevealingModule = (function (){
-				var shapesFactory = (function (){
-					function Shape(options){
-						var self = this;
-						Object.keys(options).forEach(function (key){
-							if(!options.hasOwnProperty(key)) return;
-							self[key] = options[key];
-						});
-					}
-					// Shape.prototype.move
-					function Circle(options){
-
-					}
-					// Circle.prototype.calculate	
-					function Triangle(options){
-
-					}
-					function Square(options){
-
-					}
-					return {
-						circle: Circle,
-						triangle: Triangle,
-						square: Square
-					};
-				})();
-				function createShape(type, options){
-					if(!type || type.constructor !== String) return;
-					return shapesFactory[type] && new shapes[type](options);
+			var shapesAbstractFactory = (function (){
+				function deg2rad(angle) {
+					return angle * (Math.PI/180.0);
 				}
-				return { // revealing module pattern
-					create: createShape, //command pattern
-
+				function Polygon(x, y, z, radius, numOfSides, color, fill){
+					if(numOfSides<1) numOfSides = 1;
+					this.x = x;
+					this.y = y;
+					this.z = z;
+					this.color = color || "#0000FF";
+					this.fill = fill || "#0000FF";
+					this.radius = radius;
+					this.numOfSides = numOfSides;
+				}
+				Polygon.prototype.drawPolygon = function (context) {
+					var x = this.x,
+					y = this.y,
+					radius = this.radius,
+					numOfSides = this.numOfSides,
+ 					fillStyle = this.fill,
+ 					fillStyle = this.color,
+ 					angChange = deg2rad(360.0/numOfSides),
+					prevX,
+					prevY,
+					firstX,
+					firstY;
+					context.strokeStyle = this.color;
+					context.lineWidth = 3;
+					for(var i=0;i<numofsides;i++) { 
+						angle=i*angChange;
+						prevX=x1;
+						prevY=y1;
+						x1=x+Math.cos(angle);
+						var y1=y+Math.sin(angle) * radius;
+						if(i> 0) {
+							context.moveTo(prevX,prevY);
+							context.lineTo(x1,y1);
+						}
+						else {
+							firstX = x1;
+							firstY = y1;
+						}
+						if(i == numOfSides-1)
+							context.lineTo(firstX,firstY);
+						context.stroke();
+					}
+				}
+				function newPolygon(){
+					return new Polygon(arguments);
+				}
+				return {
+					newPolygon: newPolygon
 				};
 			})();
 			
@@ -48,7 +64,7 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 			function renderShapesFacade(){
 
 				return {
-					// execute	
+					/// execute	
 				};
 			}
 
