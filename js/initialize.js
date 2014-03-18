@@ -63,23 +63,24 @@
 				height = Number(($(canvasContainer).css("height")).replace(/px$/,"")),
 				width = Number(($(canvasContainer).css("width")).replace(/px$/,""));
 				if(!canvasID || !height || !width) return;
-				var canvas, canvasExists = !!(canvas = $(canvasContainer).children("canvas"));
-				// $(canvasContainer).children("canvas").remove(); // remove children
+				var canvas, canvasExists = !!(canvas = $(canvasContainer).children("canvas")[0]);
 				canvas = canvas || document.createElement("canvas");
 				$(canvas).attr("id", canvasID);
 				$(canvas).attr("height", (height-3)+"px");
 				$(canvas).attr("width", (width-4)+"px");
 				$(canvas).css("margin-left", "-13px");
 				$(canvas).css("margin-top", "-7px");
-				if(!canvasExists) canvasContainer.appendChild(canvas);
+				if(!canvasExists) canvasContainer.appendChild(canvas); 
 				publish("renderCanvas");
 			});
+			//
 		}
 		function removeHandler(){
 			removeEvent(window, "resize", handler);
 			return true;
 		}
 		handler();
+
 	});
 
 })(jQuery);
