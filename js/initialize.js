@@ -48,7 +48,10 @@
 		addEvent(window, "resize", handler);
 		function handler(){
 			var canvasContainers = document.getElementsByClassName("canvasContainer");
-			if(canvasContainers.length<1) return;
+			if(canvasContainers.length<1) {
+				removeHandler();
+				return;
+			}
 			Object.keys(canvasContainers).forEach(function (key){
 				if(!(canvasContainers[key] instanceof HTMLElement))return;
 				var canvasContainer = canvasContainers[key], 
@@ -60,10 +63,11 @@
 				var canvas = document.createElement("canvas");
 				canvas.setAttribute("id", canvasID);
 				canvas.setAttribute("height", (height-3)+"px");
-				canvas.setAttribute("width", (width-5)+"px");
-				$(canvas).css("margin-left", "-12px");
+				canvas.setAttribute("width", (width-4)+"px");
+				$(canvas).css("margin-left", "-13px");
 				$(canvas).css("margin-top", "-7px");
 				canvasContainer.appendChild(canvas);
+				publish("renderCanvas");
 			});
 		}
 		function removeHandler(){
