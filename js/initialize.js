@@ -59,14 +59,15 @@
 				height = Number(($(canvasContainer).css("height")).replace(/px$/,"")),
 				width = Number(($(canvasContainer).css("width")).replace(/px$/,""));
 				if(!canvasID || !height || !width) return;
-				$(canvasContainer).children("canvas").remove(); // remove children
-				var canvas = document.createElement("canvas");
-				canvas.setAttribute("id", canvasID);
-				canvas.setAttribute("height", (height-3)+"px");
-				canvas.setAttribute("width", (width-4)+"px");
+				var canvas, canvasExists = !!(canvas = $(canvasContainer).children("canvas"));
+				// $(canvasContainer).children("canvas").remove(); // remove children
+				canvas = canvas || document.createElement("canvas");
+				$(canvas).attr("id", canvasID);
+				$(canvas).attr("height", (height-3)+"px");
+				$(canvas).attr("width", (width-4)+"px");
 				$(canvas).css("margin-left", "-13px");
 				$(canvas).css("margin-top", "-7px");
-				canvasContainer.appendChild(canvas);
+				if(!canvasExists) canvasContainer.appendChild(canvas);
 				publish("renderCanvas");
 			});
 		}

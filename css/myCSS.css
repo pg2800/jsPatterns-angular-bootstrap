@@ -20,7 +20,7 @@
 	overflow: auto;
 }
 canvas {
-	/*border: dotted;*/
+	border: dotted;
 /*	padding-left: 0;
 	padding-right: 0;
 	margin-left: auto;
