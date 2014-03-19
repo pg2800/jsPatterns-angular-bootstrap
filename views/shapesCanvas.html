@@ -20,27 +20,12 @@
 		</div>
 	</div>
 	<div class="col-sm-8">
-		<h2>Using only JavaScript - might not work with phones</h2>
-		<h3>Click the figure you want to add to the canvas</h3>
-		<div class="row  height-300px">
-			<div class="col-sm-2">
-				<img src="https://i.imgur.com/JsIrXYy.png" class="img-responsive img-rounded" alt="Circle">
-				<!-- <canvas id="modelCanvasJS" class=""></canvas> -->
+		<h4>Select your polygon characteristics</h4>
+		<div id="canvasContainer" class="form-control top-by-5px height-300px" data-canvasID="theCanvasJS">
+			<canvas id="theCanvasJS"></canvas>
+			<canvas id="theCanvasJSShadow" style="z-index:1000000;"></canvas>
 
-			</div>
-			<div class="col-sm-10">
-				<div id="canvasContainer" class="form-control top-by-5px height-300px" data-canvasID="theCanvasJS">
-					<canvas id="theCanvasJS"></canvas>
-					<canvas id="theCanvasJSShadow" style="z-index:1000000;"></canvas>
-
-				</div>
-
-			</div>
 		</div>
-		<!-- <br/>
-		<h2>Using more smooth technologies</h2>
-		<h3>Click the figure you want to add to the canvas</h3>
-		<canvas id="modelCanvasJQuery" class="canvas-model-shapes"></canvas>
-		<canvas id="theCanvasJQuery" class="form-control height-300px"></canvas> -->
+
 	</div>
 </div>

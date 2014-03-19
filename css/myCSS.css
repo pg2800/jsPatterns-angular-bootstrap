@@ -20,7 +20,7 @@
 	overflow: auto;
 }
 canvas {
-	border: dotted;
+	/*border: dotted;*/
 	z-index: 9998;
 	position: absolute;
 }
@@ -28,6 +28,14 @@ canvas {
 	z-index: 9997;
 	border-color: red;
 	visibility: hidden;
+}
+body {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 /*.fix-width-margin {
 	width: 100%;

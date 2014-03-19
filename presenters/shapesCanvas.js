@@ -24,6 +24,10 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				Object.defineProperties(Polygon.prototype, {
 					"renderInto": {
 						value: function (context, shadow) {
+							// HACK TO CLEAR CANVAS and SHADOW:
+							context.width = context.width;
+							shadow.width = shadow.width;
+							
 							var radius = this.radius,
 							x = this.x - radius/2,
 							y = this.y - radius/2, 
@@ -34,6 +38,7 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 							context.strokeStyle = this.color;
 							context.fillStyle = this.fill;
 							shadow = shadow.getContext('2d');
+							shadow.restore();
 							shadow.strokeStyle = this.UniversalColorID,
 							shadow.fillStyle = this.UniversalColorID,
 							context.lineWidth = shadow.lineWidth = 3;
@@ -84,8 +89,6 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 			var canvasFacade = (function (){
 				function renderPolygonsInto(canvas, shadow){
 					var polygons = shapesAbstractFactory.getPolygons();
-					console.log(polygons);
-
 					for(var key in polygons){
 						if(!polygons.hasOwnProperty(key)) return; 
 						polygons[key].renderInto(canvas, shadow);
@@ -145,7 +148,6 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				function mouseUpHandler(options){
 					e = options.e;
 					shape = x_init = y_init = undefined;
-					// publish("renderCanvas");
 				}
 
 				return {
@@ -169,30 +171,6 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 
 
 			publish("shapesCanvas");
-
-			// //get a reference to the canvas
-			// var ctx = document.getElementById("theCanvasJS").getContext("2d");
-			// $("#theCanvasJS").on("click", function (e){
-			// 	console.log(e);
-			// 	console.log(this);
-			// });
-
-			// //draw a circle
-			// ctx.beginPath();
-			// ctx.arc(60, 75, 20, 0 * Math.PI, 2 * Math.PI, true); 
-			// ctx.closePath();
-			// ctx.fill();
-
-			// // Draw triangle
-			// ctx.fillStyle="#A2322E";
-			// ctx.beginPath();
-			// // Draw a triangle location for each corner from x:y 100,110 -> 200,10 -> 300,110 (it will return to first point)
-			// ctx.moveTo(100,110);
-			// ctx.lineTo(110,120);
-			// // ctx.lineTo(300,110);
-			// ctx.closePath();
-			// ctx.fill();
-
 		}
 	};
 }]);
