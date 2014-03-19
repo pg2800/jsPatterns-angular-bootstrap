@@ -120,8 +120,7 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				var z_index = 0;
 				function mouseDoubleClick(options){
 					e = options.e;
-					var context = this.getContext('2d'),
-					pos = findPos(this),
+					var pos = findPos(this),
 					x = x_init = e.pageX - pos.x,
 					y = y_init = e.pageY - pos.y;
 					shapesAbstractFactory.newPolygon(x, y, z_index++, 100, 3, "red", "blue");
