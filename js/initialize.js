@@ -71,42 +71,42 @@
 				$(this).css("margin-left", marginLeft);
 				$(this).css("margin-top", marginTop);
 			})
-			addHandlers(canvasID+"Shadow");
+			// addHandlers(canvasID+"Shadow");
 			publish("renderCanvas");
 		}
-		function canvasMouseDownHandler(){
-			publish("canvasMouseDown");
-			console.log("canvasMouseDown");
-		}
-		function canvasMousemoveHandler(){
-			publish("canvasMousemove");
-			console.log("canvasMousemove");
-		}
-		function canvasMouseUpHandler(){
-			publish("canvasMouseUp");
-			console.log("canvasMouseUp");
-		}
-		function canvasDblClickHandler(){
-			publish("canvasDblClick");
-			console.log("canvasDblClick");
-		}
+		// function canvasMouseDownHandler(){
+		// 	publish("canvasMouseDown");
+		// 	console.log("canvasMouseDown");
+		// }
+		// function canvasMousemoveHandler(){
+		// 	publish("canvasMousemove");
+		// 	console.log("canvasMousemove");
+		// }
+		// function canvasMouseUpHandler(){
+		// 	publish("canvasMouseUp");
+		// 	console.log("canvasMouseUp");
+		// }
+		// function canvasDblClickHandler(){
+		// 	publish("canvasDblClick");
+		// 	console.log("canvasDblClick");
+		// }
 		function removeHandler(){
 			$(window).off("resize", handler);
-			$(window).off("mousedown", canvasMouseDownHandler);
-			$(window).off("mousemove", canvasMousemoveHandler);
-			$(window).off("mouseup", canvasMouseUpHandler);
-			$(window).off("dblclick", canvasDblClickHandler);
+			// $(window).off("mousedown", canvasMouseDownHandler);
+			// $(window).off("mousemove", canvasMousemoveHandler);
+			// $(window).off("mouseup", canvasMouseUpHandler);
+			// $(window).off("dblclick", canvasDblClickHandler);
 			return true;
 		}
-		var handlers = false;
-		function addHandlers(id){
-			if(handlers) return;
-			$("#" + id).on("mousedown", canvasMouseDownHandler);
-			$("#" + id).on("mousemove", canvasMousemoveHandler);
-			$("#" + id).on("mouseup", canvasMouseUpHandler);
-			$("#" + id).on("dblclick", canvasDblClickHandler);
-			handlers = true;
-		}
+		// var handlers = false;
+		// function addHandlers(id){
+		// 	if(handlers) return;
+		// 	$("#" + id).on("mousedown", canvasMouseDownHandler);
+		// 	$("#" + id).on("mousemove", canvasMousemoveHandler);
+		// 	$("#" + id).on("mouseup", canvasMouseUpHandler);
+		// 	$("#" + id).on("dblclick", canvasDblClickHandler);
+		// 	handlers = true;
+		// }
 		handler();
 
 
