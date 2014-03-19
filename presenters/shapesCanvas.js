@@ -83,9 +83,14 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				function getPolygons(){
 					return polygons;
 				}
+				function clearPolygons(){
+					polygons = {};
+					color = 0;
+				}
 				return {
 					newPolygon: newPolygon,
-					getPolygons: getPolygons
+					getPolygons: getPolygons,
+					clearPolygons: clearPolygons
 				};
 			})();
 
@@ -167,6 +172,7 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 			})();
 
 			// subscribing to event
+			shapesAbstractFactory.subscribe("clearCanvas", "clearPolygons");
 			var canvasContainer = document.getElementById("canvasContainer").childNodes;
 			canvasFacade.subscribe("canvasMouseDown", "mouseDownHandler");
 			canvasFacade.subscribe("canvasMousemove", "mouseMoveHandler");
@@ -175,7 +181,6 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 			({}).subscribe("renderCanvas", function (){
 				canvasFacade.renderPolygonsInto(canvasContainer[1], canvasContainer[3]);
 			});
-
 
 			publish("shapesCanvas");
 		}

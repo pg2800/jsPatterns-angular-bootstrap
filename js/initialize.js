@@ -53,11 +53,17 @@
 	// This will be executed first when the controller publishes the topic
 	({}).subscribe("shapesCanvas", function(){
 		$(window).on("resize", handler);
-		var visibility = false;
-		$("button#changeVisibility").on("click", function (){
-			visibility = !visibility;
-			$("canvas#theCanvasJSShadow").css("visibility", visibility? "visible" : "hidden");
-		});
+		(function fixes(){
+			$("button#changeVisibility").on("click", function (){
+				$("canvas#theCanvasJSShadow").css("visibility", ($("canvas#theCanvasJSShadow").css("visibility")) == "visible"? "hidden" : "visible");
+			});
+			$("button#clearCanvas").on("click", function (){
+				$("canvas#theCanvasJSShadow").attr("width", $("canvas#theCanvasJSShadow").attr("width"));
+				$("canvas#theCanvasJS").attr("width", $("canvas#theCanvasJS").attr("width"));
+				publish("clearCanvas");
+			});
+		})();
+
 		function handler(){
 			var canvasContainer = document.getElementById("canvasContainer");
 			if(!canvasContainer) return removeHandler();

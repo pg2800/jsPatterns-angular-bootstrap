@@ -21,11 +21,11 @@
 }
 canvas {
 	/*border: dotted;*/
-	z-index: 9998;
+	z-index: 0;
 	position: absolute;
 }
 #theCanvasJSShadow {
-	z-index: 9997;
+	z-index: 1;
 	border-color: red;
 	visibility: hidden;
 }
