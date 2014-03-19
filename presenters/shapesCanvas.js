@@ -28,7 +28,7 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 							var radius = this.radius,
 							x = this.x - radius/2,
 							y = this.y - radius/2, 
-							z = this.z,
+							// z = this.z,
 							numOfSides = this.numOfSides,
 							angChange = deg2rad(360.0/numOfSides),
 							prevX, prevY, firstX, firstY;
@@ -51,8 +51,8 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 								x = x + Math.cos(angle) * radius;
 								y = y + Math.sin(angle) * radius;
 								if(i > 0) {
-									context.moveTo(prevX, prevY, z);
-									shadow.moveTo(prevX, prevY, z);
+									context.moveTo(prevX, prevY);
+									shadow.moveTo(prevX, prevY);
 									context.lineTo(x, y);
 									shadow.lineTo(x, y);
 								}
@@ -122,13 +122,52 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					return ((r << 16) | (g << 8) | b).toString(16);
 				}
 
+				var sizes = {small:40, medium:70, large:100};
+				function getSize(){
+					var val = $("#inputSize").val().toLowerCase(), size, num;
+					if((size = sizes[val])) return size;
+					if((num = Number(val)) && num > 30 && num < 110) return num;
+					return sizes.medium;
+				}
+				var shapes = {triangle:3, quadrilateral:4, pentagon:5};
+				function getShape(){
+					var val = $("#inputShape").val().toLowerCase(), shape, num;
+					if((shape = shapes[val])) return shape;
+					if((num = Number(val)) && num > 2 && num < 15) return num;
+					return shapes.quadrilateral;
+				}
+				var colors = {black:"#000000", blue:"#0000ff", red:"#ff0000"},
+				hexRegEx = /^#(?:[0-9a-zA-Z]{3}|[0-9a-zA-Z]{6})$/;
+				function getColor(c){
+					var color, test;
+					if((color = colors[c])) return color;
+					if((test = hexRegEx.test(c))) return c;
+					return colors.blue;
+				}
+				function getStrokeColor(){
+					var val = $("#inputStroke").val().toLowerCase();
+					return getColor(val);
+				}
+				function getFillColor(){
+					var val = $("#inputFill").val().toLowerCase();
+					return getColor(val);
+				}
 				var z_index = 0;
 				function mouseDoubleClick(options){
 					e = options.e;
 					var pos = findPos(this),
 					x = x_init = e.pageX - pos.x,
-					y = y_init = e.pageY - pos.y;
-					shapesAbstractFactory.newPolygon(x, y, z_index++, 100, 3, "red", "blue");
+					y = y_init = e.pageY - pos.y,
+					size = getSize(),
+					shape = getShape(),
+					stroke = getStrokeColor(),
+					fill = getFillColor();
+					console.log(size);
+					console.log(shape);
+					console.log(stroke);
+					console.log(fill);
+
+					shapesAbstractFactory.newPolygon(x, y, z_index++, size, shape, stroke, fill);
 					publish("renderCanvas");
 				}
 				var shape, x_init, y_init;
