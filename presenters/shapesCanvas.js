@@ -76,32 +76,32 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					getPolygons: getPolygons
 				};
 			})();
-
-			function renderPolygonsInto(canvas, shadow){
-				var polygons = shapesAbstractFactory.getPolygons();
-				for(var key in polygons){
-					if(!polygons.hasOwnProperty(key)) return; 
-					polygons[key].renderInto(canvas, shadow);
+			var canvasFacade = (function (){
+				function renderPolygonsInto(canvas, shadow){
+					var polygons = shapesAbstractFactory.getPolygons();
+					for(var key in polygons){
+						if(!polygons.hasOwnProperty(key)) return; 
+						polygons[key].renderInto(canvas, shadow);
+					}
 				}
-			}
-			function findPos(obj) {
-				var curleft = 0, curtop = 0;
-				if (obj.offsetParent) {
-					do {
-						curleft += obj.offsetLeft;
-						curtop += obj.offsetTop;
-					} while (obj = obj.offsetParent);
-					return { x: curleft, y: curtop };
+				function findPos(obj) {
+					var curleft = 0, curtop = 0;
+					if (obj.offsetParent) {
+						do {
+							curleft += obj.offsetLeft;
+							curtop += obj.offsetTop;
+						} while (obj = obj.offsetParent);
+						return { x: curleft, y: curtop };
+					}
 				}
-			}
-			function rgbToHex(r, g, b) {
-				if (r > 255 || g > 255 || b > 255) throw "Invalid color component";
-				return ((r << 16) | (g << 8) | b).toString(16);
-			}
-			function mouseUpHandler(){
-				shapesAbstractFactory.newPolygon(/**/);	
+				function rgbToHex(r, g, b) {
+					if (r > 255 || g > 255 || b > 255) throw "Invalid color component";
+					return ((r << 16) | (g << 8) | b).toString(16);
 				}
-			function mouseDownHandler(e){
+				function mouseUpHandler(){
+					shapesAbstractFactory.newPolygon(/**/);	
+				}
+				function mouseDownHandler(e){
 				// set up some squares
 				var context = this.getContext('2d'),
 				pos = findPos(this),
@@ -114,24 +114,14 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				// if(!shape) $(this.)
 			}
 			$("#theCanvasJSShadow").on("mousedown", mouseDownHandler);
+			return {
 
-			// mediator
-			// to tell which one has been clicked and also update whatever it needs to update
-			// on canvas click
-			function shapesMediator(e){
-				console.log(this);
-				console.log(e);
-			}
+			};
+		})();
+		
+		
+		
 
-
-
-			
-			function renderShapesFacade(){
-
-				return {
-					/// execute	
-				};
-			}
 			// facade
 			({}).subscribe("shapesCreatorMediator", function (){
 
@@ -140,16 +130,12 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 
 			publish("shapesCanvas");
 
-
-
-
-
-			//get a reference to the canvas
-			var ctx = document.getElementById("theCanvasJS").getContext("2d");
-			$("#theCanvasJS").on("click", function (e){
-				console.log(e);
-				console.log(this);
-			});
+			// //get a reference to the canvas
+			// var ctx = document.getElementById("theCanvasJS").getContext("2d");
+			// $("#theCanvasJS").on("click", function (e){
+			// 	console.log(e);
+			// 	console.log(this);
+			// });
 
 			// //draw a circle
 			// ctx.beginPath();

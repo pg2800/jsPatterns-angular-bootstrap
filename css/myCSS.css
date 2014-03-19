@@ -21,11 +21,17 @@
 }
 canvas {
 	border: dotted;
+	z-index: 9998;
+	position: absolute;
 /*	padding-left: 0;
 	padding-right: 0;
 	margin-left: auto;
 	margin-right: auto;
 	display: block;*/
+}
+#theCanvasJSShadow {
+	z-index: 9999;
+	border-color: red;
 }
 /*.fix-width-margin {
 	width: 100%;

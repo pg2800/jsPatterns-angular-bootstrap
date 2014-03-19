@@ -48,42 +48,42 @@
  	});
 
 	// Subscribing Canvas from shapesCanvas View to rezise the canvas.
+	// This will be executed first when the controller publishes the topic
 	({}).subscribe("shapesCanvas", function(){
-		addEvent(window, "resize", handler);
+		$(window).on("resize", handler);
 		function handler(){
-			var canvasContainers = document.getElementsByClassName("canvasContainer");
-			if(canvasContainers.length<1) {
-				removeHandler();
-				return;
-			}
-			Object.keys(canvasContainers).forEach(function (key){
-				if(!(canvasContainers[key] instanceof HTMLElement))return;
-				var canvasContainer = canvasContainers[key], 
-				canvasID = canvasContainer.getAttribute("data-canvasID"),
-				height = Number(($(canvasContainer).css("height")).replace(/px$/,"")),
-				width = Number(($(canvasContainer).css("width")).replace(/px$/,""));
-				if(!canvasID || !height || !width) return;
-				var canvas, canvasExists = !!(canvas = $(canvasContainer).children("#"+canvasID)),
-				shadow, shadowExists = !!(shadow = $(canvasContainer).children("#"+canvasID+"Shadow"));
-				canvas = canvas || document.createElement("canvas");
-				$(canvas).attr("id", canvasID);
-				$(canvas).attr("height", (height-3)+"px");
-				$(canvas).attr("width", (width-4)+"px");
-				$(canvas).css("margin-left", "-13px");
-				$(canvas).css("margin-top", "-7px");
-				if(!canvasExists) canvasContainer.appendChild(canvas); 
-				shadow = $(canvasContainer).children("#"+canvasID).clone(true);
-				$(shadow).attr("id", canvasID+"Shadow");
+			var canvasContainer = document.getElementById("canvasContainer");
+			if(!canvasContainer) return removeHandler();
+			canvasID = canvasContainer.getAttribute("data-canvasID"),
+			height = Number(($(canvasContainer).css("height")).replace(/px$/,"")),
+			width = Number(($(canvasContainer).css("width")).replace(/px$/,""));
+			if(!canvasID || !height || !width) return;
 
-				if(!shadowExists) canvasContainer.appendChild(shadow); 
+			// fixes
+			height = (height-3)+"px";
+			width = (width-4)+"px";
+			var marginLeft = "-13px",
+			marginTop = "-7px";
+
+			// Create canvas and shadow
+			// var canvas = $(canvasContainer).children("#"+canvasID)),
+			// //
+			// shadow = $(canvasContainer).children("#"+canvasID+"Shadow"));
+
+			//
+			$(canvasContainer).children("canvas").each(function(){
+				$(this).attr("height", height);
+				$(this).attr("width", width);
+				$(this).css("margin-left", marginLeft);
+				$(this).css("margin-top", marginTop);
+			})
 
 
-				publish("renderCanvas");
-			});
+			publish("renderCanvas");
 			//
 		}
 		function removeHandler(){
-			removeEvent(window, "resize", handler);
+			$(window).off("resize", handler);
 			return true;
 		}
 		handler();
