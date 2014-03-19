@@ -8,12 +8,13 @@
 		var topics = {};
 		// Publish
 		Object.defineProperty(window, "publish", {
-			value: function (topicName){
+			value: function (topicName, options){
 				var topic;
+				options = options || {context: this}
 				if(!topicName) return;
 				if(!(topic = topics[topicName])) return;
 				topic.forEach(function (handler){
-					handler();
+					handler.call(options.context, options);
 				});
 			}
 		});
@@ -25,8 +26,9 @@
 				if(handler instanceof Function){
 					topic.push(handler);
 				} else if(typeof handler == "string"){
-					topic.push(function (){
-						if(self[handler] && self[handler] instanceof Function) return self[handler]();
+					topic.push(function (options){
+						if(self[handler] && self[handler] instanceof Function) 
+							return self[handler].call(options.context, options);
 						else return;
 					});
 				}
@@ -71,42 +73,46 @@
 				$(this).css("margin-left", marginLeft);
 				$(this).css("margin-top", marginTop);
 			})
-			// addHandlers(canvasID+"Shadow");
+			addHandlers(canvasID+"Shadow");
 			publish("renderCanvas");
 		}
-		// function canvasMouseDownHandler(){
-		// 	publish("canvasMouseDown");
-		// 	console.log("canvasMouseDown");
-		// }
-		// function canvasMousemoveHandler(){
-		// 	publish("canvasMousemove");
-		// 	console.log("canvasMousemove");
-		// }
-		// function canvasMouseUpHandler(){
-		// 	publish("canvasMouseUp");
-		// 	console.log("canvasMouseUp");
-		// }
-		// function canvasDblClickHandler(){
-		// 	publish("canvasDblClick");
-		// 	console.log("canvasDblClick");
-		// }
+		function canvasMouseDownHandler(e){
+			// $("#theCanvasJSShadow").trigger("mousedown", e);
+			publish("canvasMouseDown", {context:e.target, e:e});
+			console.log("canvasMouseDown");
+		}
+		function canvasMousemoveHandler(e){
+			// $("#theCanvasJSShadow").trigger("mousemove", e);
+			publish("canvasMousemove", {context:e.target, e:e});
+			console.log("canvasMousemove");
+		}
+		function canvasMouseUpHandler(e){
+			// $("#theCanvasJSShadow").trigger("mouseup", e);
+			publish("canvasMouseUp", {context:e.target, e:e});
+			console.log("canvasMouseUp");
+		}
+		function canvasDblClickHandler(e){
+			// $("#theCanvasJSShadow").trigger("dblclick", e);
+			publish("canvasDblClick", {context:e.target, e:e});
+			console.log("canvasDblClick");
+		}
 		function removeHandler(){
 			$(window).off("resize", handler);
-			// $(window).off("mousedown", canvasMouseDownHandler);
-			// $(window).off("mousemove", canvasMousemoveHandler);
-			// $(window).off("mouseup", canvasMouseUpHandler);
-			// $(window).off("dblclick", canvasDblClickHandler);
+			$(window).off("mousedown", canvasMouseDownHandler);
+			$(window).off("mousemove", canvasMousemoveHandler);
+			$(window).off("mouseup", canvasMouseUpHandler);
+			$(window).off("dblclick", canvasDblClickHandler);
 			return true;
 		}
-		// var handlers = false;
-		// function addHandlers(id){
-		// 	if(handlers) return;
-		// 	$("#" + id).on("mousedown", canvasMouseDownHandler);
-		// 	$("#" + id).on("mousemove", canvasMousemoveHandler);
-		// 	$("#" + id).on("mouseup", canvasMouseUpHandler);
-		// 	$("#" + id).on("dblclick", canvasDblClickHandler);
-		// 	handlers = true;
-		// }
+		var handlers = false;
+		function addHandlers(id){
+			if(handlers) return;
+			$("#theCanvasJS").on("mousedown", canvasMouseDownHandler);
+			$("#theCanvasJS").on("mousemove", canvasMousemoveHandler);
+			$("#theCanvasJS").on("mouseup", canvasMouseUpHandler);
+			$("#theCanvasJS").on("dblclick", canvasDblClickHandler);
+			handlers = true;
+		}
 		handler();
 
 

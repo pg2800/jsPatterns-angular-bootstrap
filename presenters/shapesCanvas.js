@@ -25,11 +25,9 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					"renderInto": {
 						value: function (context, shadow) {
 							var radius = this.radius,
-							x = this.x - radius,
-							y = this.y - radius, 
+							x = this.x - radius/2,
+							y = this.y - radius/2, 
 							numOfSides = this.numOfSides,
-							fillStyle = this.fill,
-							fillStyle = this.color,
 							angChange = deg2rad(360.0/numOfSides),
 							prevX, prevY, firstX, firstY;
 							context = context.getContext('2d');
@@ -43,7 +41,7 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 								angle = i * angChange;
 								prevX = x;
 								prevY = y;
-								x = x + Math.cos(angle);
+								x = x + Math.cos(angle) * radius;
 								y = y + Math.sin(angle) * radius;
 								if(i > 0) {
 									context.moveTo(prevX, prevY);
@@ -56,10 +54,14 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 									firstY = y;
 								}
 								if(i == numOfSides - 1) {
-									context.lineTo(firstX,firstY);									
-									shadow.lineTo(firstX,firstY);									
+									context.lineTo(firstX,firstY);
+									shadow.lineTo(firstX,firstY);
 								} 
 							}
+							context.closePath();
+							context.fill();
+							shadow.closePath();
+							shadow.fill();
 
 						}
 					}
@@ -82,6 +84,8 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 			var canvasFacade = (function (){
 				function renderPolygonsInto(canvas, shadow){
 					var polygons = shapesAbstractFactory.getPolygons();
+					console.log(polygons);
+
 					for(var key in polygons){
 						if(!polygons.hasOwnProperty(key)) return; 
 						polygons[key].renderInto(canvas, shadow);
@@ -103,19 +107,18 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				}
 
 				var z_index = 0;
-				function mouseDoubleClick(e){
-					console.log("HOLAAA");
+				function mouseDoubleClick(options){
+					e = options.e;
 					var context = this.getContext('2d'),
 					pos = findPos(this),
 					x = x_init = e.pageX - pos.x, 
 					y = y_init = e.pageY - pos.y;
-					shapesAbstractFactory.newPolygon(x, y, z_index++, 10, 3, "red", "blue");
-					//radius, numOfSides, color, fill);
-					//
+					shapesAbstractFactory.newPolygon(x, y, z_index++, 100, 3, "red", "blue");
 					publish("renderCanvas");
 				}
 				var shape, x_init, y_init;
-				function mouseDownHandler(e){
+				function mouseDownHandler(options){
+					e = options.e;
 					var context = this.getContext('2d'),
 					pos = findPos(this),
 					x = x_init = e.pageX - pos.x, 
@@ -124,7 +127,8 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					polygons = shapesAbstractFactory.getPolygons();
 					shape = polygons["#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6)];
 				}
-				function mouseMoveHandler(e){
+				function mouseMoveHandler(options){
+					e = options.e;
 					if(!shape || !x_init || !y_init) return;
 					var pos = findPos(this),
 					x = e.pageX - pos.x, 
@@ -138,7 +142,8 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					shape.z = z_index++;
 					publish("renderCanvas");
 				}
-				function mouseUpHandler(e){
+				function mouseUpHandler(options){
+					e = options.e;
 					shape = x_init = y_init = undefined;
 					// publish("renderCanvas");
 				}
@@ -152,26 +157,18 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				};
 			})();
 
-			publish("shapesCanvas");
 			// subscribing to event
 			var canvasContainer = document.getElementById("canvasContainer").childNodes;
-			console.log(canvasContainer[0]);
-			console.log(canvasContainer[1]);
-			console.log(canvasContainer[2]);
-			console.log(canvasContainer[3]);
-			addEvent(canvasContainer[3], "mousedown", canvasFacade.mouseDownHandler);
-			addEvent(canvasContainer[3], "mousemove", canvasFacade.mouseMoveHandler);
-			addEvent(canvasContainer[3], "mouseup", canvasFacade.mouseUpHandler);
-			addEvent(canvasContainer[3], "dblclick", canvasFacade.mouseDoubleClick);
-			// ({}).subscribe("canvasMouseDown",canvasFacade.mouseDownHandler);
-			// ({}).subscribe("canvasMousemove",canvasFacade.mouseMoveHandler);
-			// ({}).subscribe("canvasMouseUp",canvasFacade.mouseUpHandler);
-			// ({}).subscribe("canvasDblClick",canvasFacade.mouseDoubleClick);
+			canvasFacade.subscribe("canvasMouseDown", "mouseDownHandler");
+			canvasFacade.subscribe("canvasMousemove", "mouseMoveHandler");
+			canvasFacade.subscribe("canvasMouseUp", "mouseUpHandler");
+			canvasFacade.subscribe("canvasDblClick", "mouseDoubleClick");
 			({}).subscribe("renderCanvas", function (){
 				canvasFacade.renderPolygonsInto(canvasContainer[1], canvasContainer[3]);
 			});
 
 
+			publish("shapesCanvas");
 
 			// //get a reference to the canvas
 			// var ctx = document.getElementById("theCanvasJS").getContext("2d");

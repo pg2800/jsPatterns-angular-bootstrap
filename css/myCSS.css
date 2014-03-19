@@ -25,9 +25,9 @@ canvas {
 	position: absolute;
 }
 #theCanvasJSShadow {
-	z-index: 9999;
+	z-index: 9997;
 	border-color: red;
-	/*visibility: hidden;*/
+	visibility: hidden;
 }
 /*.fix-width-margin {
 	width: 100%;
