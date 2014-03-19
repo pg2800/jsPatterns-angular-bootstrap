@@ -63,7 +63,8 @@
 				height = Number(($(canvasContainer).css("height")).replace(/px$/,"")),
 				width = Number(($(canvasContainer).css("width")).replace(/px$/,""));
 				if(!canvasID || !height || !width) return;
-				var canvas, canvasExists = !!(canvas = $(canvasContainer).children("canvas")[0]);
+				var canvas, canvasExists = !!(canvas = $(canvasContainer).children("#"+canvasID)),
+				shadow, shadowExists = !!(shadow = $(canvasContainer).children("#"+canvasID+"Shadow"));
 				canvas = canvas || document.createElement("canvas");
 				$(canvas).attr("id", canvasID);
 				$(canvas).attr("height", (height-3)+"px");
@@ -71,6 +72,12 @@
 				$(canvas).css("margin-left", "-13px");
 				$(canvas).css("margin-top", "-7px");
 				if(!canvasExists) canvasContainer.appendChild(canvas); 
+				shadow = $(canvasContainer).children("#"+canvasID).clone(true);
+				$(shadow).attr("id", canvasID+"Shadow");
+
+				if(!shadowExists) canvasContainer.appendChild(shadow); 
+
+
 				publish("renderCanvas");
 			});
 			//
