@@ -20,12 +20,12 @@
 		</div>
 	</div>
 	<!-- Inputs to get specs of next shape -->
-	<div class="col-sm-8">
+	<div id="form" class="col-sm-8">
 		<h4>Select your polygon specs and click or tap twice</h4>
 		<div class="row">
 			<div class="col-sm-6 top-by-5px">
 				<div class="input-group">
-					<input type="text" class="form-control text-center">
+					<input type="text" class="form-control text-center" name="size" pattern="[a-zA-Z]*|[0-9]{2}">
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Size <span class="caret"></span></button>
 						<ul id="size" class="dropdown-menu pull-right" name="specs">
@@ -38,7 +38,7 @@
 			</div><!-- /.col-lg-6 -->
 			<div class="col-sm-6 top-by-5px">
 				<div class="input-group">
-					<input type="text" class="form-control text-center">
+					<input type="text" class="form-control text-center" name="shape">
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Polygon shape <span class="caret"></span></button>
 						<ul id="shape" class="dropdown-menu pull-right" name="specs">
@@ -51,7 +51,7 @@
 			</div><!-- /.col-lg-6 -->
 			<div class="col-sm-6 top-by-5px">
 				<div class="input-group">
-					<input type="text" class="form-control text-center">
+					<input type="text" class="form-control text-center" name="stroke">
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Stroke color <span class="caret"></span></button>
 						<ul id="stroke" class="dropdown-menu pull-right" name="specs">
@@ -66,7 +66,7 @@
 			</div><!-- /.col-lg-6 -->
 			<div class="col-sm-6 top-by-5px">
 				<div class="input-group">
-					<input type="text" class="form-control text-center">
+					<input type="text" class="form-control text-center" name="fill">
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Fill color <span class="caret"></span></button>
 						<ul id="fill" class="dropdown-menu pull-right" name="specs">
@@ -74,7 +74,7 @@
 							<li><a href="">Blue</a></li>
 							<li><a href="">Red</a></li>
 							<li class="divider"></li>
-							<li class="text-center">Choose: <input type="color" href=""></li>
+							<li class="text-center">Choose: <input type="color"></li>
 						</ul>
 					</div><!-- /btn-group -->
 				</div><!-- /input-group -->
@@ -86,7 +86,9 @@
 				</div>
 			</div><!-- /.col-lg-12 -->
 			<div class="col-sm-6 top-by-5px text-center">
-				<button type="button" id="changeVisibility" class="btn btn-warning">Switch between Canvas and the Shadow</button>
+				<div class="btn-group" data-toggle="buttons-checkbox">
+					<button type="button" id="changeVisibility" class="btn btn-warning">Switch between Canvas and the Shadow</button>
+				</div>
 			</div><!-- /.col-lg-12 -->
 			<div class="col-sm-6 top-by-5px text-center">
 				<button type="button" id="clearCanvas" class="btn btn-danger">Clear Canvas</button>

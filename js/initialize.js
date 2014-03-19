@@ -1,10 +1,6 @@
 (function($){
-	// Observer:
-	$('.nav a').on('click', function(){
-		$(".navbar-toggle").click();
-	});
 	// Publish && Subscribe
-	(function(){
+	(function publishSubscribe(){
 		var topics = {};
 		// Publish
 		Object.defineProperty(window, "publish", {
@@ -63,6 +59,41 @@
 				publish("clearCanvas");
 			});
 		})();
+
+		// Validations
+		function validations (){
+			var alphaOrNumeric = /^(?:[a-zA-Z]*|[0-9]*)$/;
+			function validateOrAlphanumeric(input){
+				$(input).on("input", function(){
+					if(!alphaOrNumeric.test(this.value)) {
+						$(this).parent().addClass("has-error");
+						$(this).parent().removeClass("has-success");
+					}
+					else {
+						$(this).parent().addClass("has-success");
+						$(this).parent().removeClass("has-error");
+					}
+				});
+			}
+			validateOrAlphanumeric($("input[type=text][name=size]"));
+			validateOrAlphanumeric($("input[type=text][name=shape]"));
+
+			var color = /^(?:[a-zA-Z]*|\#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}))$/;
+			function validateColor(input){
+				$(input).on("input", function(){
+					if(!color.test(this.value)) {
+						$(this).parent().addClass("has-error");
+						$(this).parent().removeClass("has-success");
+					}
+					else {
+						$(this).parent().addClass("has-success");
+						$(this).parent().removeClass("has-error");
+					}
+				});
+			}
+			validateColor($("input[type=text][name=stroke]"));
+			validateColor($("input[type=text][name=fill]"));
+		}
 
 		function handler(){
 			var canvasContainer = document.getElementById("canvasContainer");
