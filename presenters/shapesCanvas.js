@@ -24,7 +24,6 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				Object.defineProperties(Polygon.prototype, {
 					"renderInto": {
 						value: function (context, shadow) {
-							// shadow = shadow || {moveTo:function (){}, lineTo:function (){}}; // dummy, just in case
 							var radius = this.radius,
 							x = this.x - radius,
 							y = this.y - radius, 
@@ -76,6 +75,7 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					getPolygons: getPolygons
 				};
 			})();
+			// facade to render shapes into canvas
 			var canvasFacade = (function (){
 				function renderPolygonsInto(canvas, shadow){
 					var polygons = shapesAbstractFactory.getPolygons();
@@ -98,35 +98,65 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					if (r > 255 || g > 255 || b > 255) throw "Invalid color component";
 					return ((r << 16) | (g << 8) | b).toString(16);
 				}
-				function mouseUpHandler(){
-					shapesAbstractFactory.newPolygon(/**/);	
+
+				var z_index = 0;
+				function mouseDoubleClick(){
+					var context = this.getContext('2d'),
+					pos = findPos(this),
+					x = x_init = e.pageX - pos.x, 
+					y = y_init = e.pageY - pos.y;
+					shapesAbstractFactory.newPolygon(x, y, z_index++, 10, 3, "red", "blue");
+					//radius, numOfSides, color, fill);
+					//
+					publish("renderCanvas");
 				}
+				var shape, x_init, y_init;
 				function mouseDownHandler(e){
-				// set up some squares
-				var context = this.getContext('2d'),
-				pos = findPos(this),
-				x = e.pageX - pos.x, 
-				y = e.pageY - pos.y, 
-				p = context.getImageData(x, y, 1, 1).data, 
-				polygons = shapesAbstractFactory.getPolygons(),
-				shape = polygons["#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6)];
-				console.log(shape);
-				// if(!shape) $(this.)
-			}
-			$("#theCanvasJSShadow").on("mousedown", mouseDownHandler);
-			return {
+					var context = this.getContext('2d'),
+					pos = findPos(this),
+					x = x_init = e.pageX - pos.x, 
+					y = y_init = e.pageY - pos.y, 
+					p = context.getImageData(x, y, 1, 1).data, 
+					polygons = shapesAbstractFactory.getPolygons();
+					shape = polygons["#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6)];
+				}
+				function mouseMoveHandler(){
+					if(!shape || !x_init || !y_init) return;
+					var pos = findPos(this),
+					x = e.pageX - pos.x, 
+					y = e.pageY - pos.y;
 
-			};
-		})();
-		
-		
-		
+					x_init += x - x_init;
+					y_init += y - y_init;
 
-			// facade
-			({}).subscribe("shapesCreatorMediator", function (){
+					shape.x = x_init;
+					shape.y = y_init;
+					shape.z = z_index++;
+					publish("renderCanvas");
+				}
+				function mouseUpHandler(){
+					shape = x_init = y_init = undefined;
+					// publish("renderCanvas");
+				}
 
+				return {
+					renderPolygonsInto: renderPolygonsInto,
+					mouseDownHandler: mouseDownHandler,
+					mouseMoveHandler: mouseMoveHandler,
+					mouseUpHandler: mouseUpHandler,
+					mouseDoubleClick: mouseDoubleClick
+				};
+			})();
+
+			// subscribing to event
+			({}).subscribe("canvasMouseDown",canvasFacade.mouseDownHandler);
+			({}).subscribe("canvasMousemove",canvasFacade.mouseMoveHandler);
+			({}).subscribe("canvasMouseUp",canvasFacade.mouseUpHandler);
+			({}).subscribe("canvasDblClick",canvasFacade.mouseDoubleClick);
+			({}).subscribe("renderCanvas", function (){
+				
 			});
-			
+
 
 			publish("shapesCanvas");
 
@@ -152,9 +182,6 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 			// // ctx.lineTo(300,110);
 			// ctx.closePath();
 			// ctx.fill();
-
-
-
 
 		}
 	};
