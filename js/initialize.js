@@ -61,7 +61,7 @@
 		})();
 
 		// Validations
-		function validations (){
+		(function validations (){
 			var alphaOrNumeric = /^(?:[a-zA-Z]*|[0-9]*)$/;
 			function validateOrAlphanumeric(input){
 				$(input).on("input", function(){
@@ -93,8 +93,27 @@
 			}
 			validateColor($("input[type=text][name=stroke]"));
 			validateColor($("input[type=text][name=fill]"));
-		}
+		})();
 
+		(function colorSelectersEventHandlers(){
+			$("input#firstColorInput").on("change", function(){
+				$("input[type=text][name=stroke]").attr("value", $(this).val());
+			});
+			$("input#secondColorInput").on("change", function(){
+				$("input[type=text][name=fill]").attr("value", $(this).val());
+			});
+		})();
+
+		(function selectedOptionFromDropDowns(){
+			$("ul[name=specs]").each(function(){
+				var self = this;
+				$(self).find("a").each(function(){
+					$(this).on("click", function (){
+						$("input[name="+$(self).attr("id")+"]").val($(this).text());
+					});
+				});
+			});
+		})();
 		function handler(){
 			var canvasContainer = document.getElementById("canvasContainer");
 			if(!canvasContainer) return removeHandler();
