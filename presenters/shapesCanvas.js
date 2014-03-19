@@ -7,7 +7,8 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				var polygons = {};
 				var color = 0; // max: 16777215
 				function nextUniversalColor(){
-					if(color++ > 16777215) throw "NO MORE SHAPES TO BUILD";
+					color+=1;
+					if(color > 16777215) throw "NO MORE SHAPES TO BUILD";
 					return "#" + ("000000" + color.toString(16)).slice(-6);
 				}
 				function deg2rad(angle) {return angle * (Math.PI/180.0);}
@@ -24,21 +25,22 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				Object.defineProperties(Polygon.prototype, {
 					"renderInto": {
 						value: function (context, shadow) {
-							// HACK TO CLEAR CANVAS and SHADOW:
-							context.width = context.width;
-							shadow.width = shadow.width;
-							
 							var radius = this.radius,
 							x = this.x - radius/2,
 							y = this.y - radius/2, 
+							z = this.z,
 							numOfSides = this.numOfSides,
 							angChange = deg2rad(360.0/numOfSides),
 							prevX, prevY, firstX, firstY;
+
 							context = context.getContext('2d');
+							shadow = shadow.getContext('2d');
+
+							context.beginPath();
+							shadow.beginPath();
+
 							context.strokeStyle = this.color;
 							context.fillStyle = this.fill;
-							shadow = shadow.getContext('2d');
-							shadow.restore();
 							shadow.strokeStyle = this.UniversalColorID,
 							shadow.fillStyle = this.UniversalColorID,
 							context.lineWidth = shadow.lineWidth = 3;
@@ -49,8 +51,8 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 								x = x + Math.cos(angle) * radius;
 								y = y + Math.sin(angle) * radius;
 								if(i > 0) {
-									context.moveTo(prevX, prevY);
-									shadow.moveTo(prevX, prevY);
+									context.moveTo(prevX, prevY, z);
+									shadow.moveTo(prevX, prevY, z);
 									context.lineTo(x, y);
 									shadow.lineTo(x, y);
 								}
@@ -64,10 +66,12 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 								} 
 							}
 							context.closePath();
-							context.fill();
 							shadow.closePath();
-							shadow.fill();
 
+							context.stroke();
+							context.fill();
+							shadow.stroke();
+							shadow.fill();
 						}
 					}
 				});
@@ -88,6 +92,10 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 			// facade to render shapes into canvas
 			var canvasFacade = (function (){
 				function renderPolygonsInto(canvas, shadow){
+					// HACK TO CLEAR CANVAS and SHADOW:
+					canvas.width = canvas.width;
+					shadow.width = shadow.width;
+
 					var polygons = shapesAbstractFactory.getPolygons();
 					for(var key in polygons){
 						if(!polygons.hasOwnProperty(key)) return; 
@@ -114,7 +122,7 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					e = options.e;
 					var context = this.getContext('2d'),
 					pos = findPos(this),
-					x = x_init = e.pageX - pos.x, 
+					x = x_init = e.pageX - pos.x,
 					y = y_init = e.pageY - pos.y;
 					shapesAbstractFactory.newPolygon(x, y, z_index++, 100, 3, "red", "blue");
 					publish("renderCanvas");
@@ -126,9 +134,10 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					pos = findPos(this),
 					x = x_init = e.pageX - pos.x, 
 					y = y_init = e.pageY - pos.y, 
-					p = context.getImageData(x, y, 1, 1).data, 
+					p = context.getImageData(x, y, 1, 1).data,
 					polygons = shapesAbstractFactory.getPolygons();
 					shape = polygons["#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6)];
+					if(shape) shape.z = z_index++;
 				}
 				function mouseMoveHandler(options){
 					e = options.e;
@@ -142,12 +151,11 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 
 					shape.x = x_init;
 					shape.y = y_init;
-					shape.z = z_index++;
 					publish("renderCanvas");
 				}
 				function mouseUpHandler(options){
 					e = options.e;
-					shape = x_init = y_init = undefined;
+					shape = x_init = y_init = null;
 				}
 
 				return {

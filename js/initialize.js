@@ -53,6 +53,11 @@
 	// This will be executed first when the controller publishes the topic
 	({}).subscribe("shapesCanvas", function(){
 		$(window).on("resize", handler);
+		var visibility = false;
+		$("button#changeVisibility").on("click", function (){
+			visibility = !visibility;
+			$("canvas#theCanvasJSShadow").css("visibility", visibility? "visible" : "hidden");
+		});
 		function handler(){
 			var canvasContainer = document.getElementById("canvasContainer");
 			if(!canvasContainer) return removeHandler();
@@ -72,7 +77,7 @@
 				$(this).attr("width", width);
 				$(this).css("margin-left", marginLeft);
 				$(this).css("margin-top", marginTop);
-			})
+			});
 			addHandlers(canvasID+"Shadow");
 			publish("renderCanvas");
 		}
@@ -90,10 +95,10 @@
 		}
 		function removeHandler(){
 			$(window).off("resize", handler);
-			$(window).off("mousedown", canvasMouseDownHandler);
-			$(window).off("mousemove", canvasMousemoveHandler);
-			$(window).off("mouseup", canvasMouseUpHandler);
-			$(window).off("dblclick", canvasDblClickHandler);
+			$("#theCanvasJS").off("mousedown", canvasMouseDownHandler);
+			$("#theCanvasJS").off("mousemove", canvasMousemoveHandler);
+			$("#theCanvasJS").off("mouseup", canvasMouseUpHandler);
+			$("#theCanvasJS").off("dblclick", canvasDblClickHandler);
 			return true;
 		}
 		var handlers = false;
