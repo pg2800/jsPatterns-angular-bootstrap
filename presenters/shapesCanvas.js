@@ -40,9 +40,11 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 							shadow.beginPath();
 
 							context.strokeStyle = this.color;
+							shadow.strokeStyle = this.UniversalColorID;
+
 							context.fillStyle = this.fill;
-							shadow.strokeStyle = this.UniversalColorID,
-							shadow.fillStyle = this.UniversalColorID,
+							shadow.fillStyle = this.UniversalColorID;
+
 							context.lineWidth = shadow.lineWidth = 3;
 							for(var i=0;i<numOfSides;i++) { 
 								angle = i * angChange;
@@ -66,12 +68,11 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 								} 
 							}
 							context.closePath();
-							shadow.closePath();
-
-							context.stroke();
 							context.fill();
-							shadow.stroke();
+							context.stroke();
+							shadow.closePath();
 							shadow.fill();
+							shadow.stroke();
 						}
 					}
 				});
