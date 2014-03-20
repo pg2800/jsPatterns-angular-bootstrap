@@ -152,18 +152,26 @@
 		function removeHandler(){
 			$(window).off("resize", handler);
 			$("#theCanvasJS").off("mousedown", canvasMouseDownHandler);
+			// $("#theCanvasJS").off("", canvasMouseDownHandler);
 			$("#theCanvasJS").off("mousemove", canvasMousemoveHandler);
+			// $("#theCanvasJS").off("", canvasMousemoveHandler);
 			$("#theCanvasJS").off("mouseup", canvasMouseUpHandler);
+			// $("#theCanvasJS").off("", canvasMouseUpHandler);
 			$("#theCanvasJS").off("dblclick", canvasDblClickHandler);
+			// $("#theCanvasJS").off("", canvasDblClickHandler);
 			return true;
 		}
 		var handlers = false;
 		function addHandlers(id){
 			if(handlers) return;
 			$("#theCanvasJS").on("mousedown", canvasMouseDownHandler);
+			// $("#theCanvasJS").on("press", canvasMouseDownHandler);
 			$("#theCanvasJS").on("mousemove", canvasMousemoveHandler);
+			// $("#theCanvasJS").on("drag", canvasMousemoveHandler);
 			$("#theCanvasJS").on("mouseup", canvasMouseUpHandler);
+			// $("#theCanvasJS").on("", canvasMouseUpHandler);
 			$("#theCanvasJS").on("dblclick", canvasDblClickHandler);
+			$("#theCanvasJS").on("doubletap", '.touchme', canvasDblClickHandler);
 			handlers = true;
 		}
 		handler();
