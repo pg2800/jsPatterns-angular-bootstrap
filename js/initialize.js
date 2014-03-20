@@ -171,7 +171,7 @@
 			$("#theCanvasJS").on("mouseup", canvasMouseUpHandler);
 			// $("#theCanvasJS").on("", canvasMouseUpHandler);
 			$("#theCanvasJS").on("dblclick", canvasDblClickHandler);
-			$("#theCanvasJS").on("doubletap", '.touchme', canvasDblClickHandler);
+			$("#theCanvasJS").on("doubletap", canvasDblClickHandler);
 			handlers = true;
 		}
 		handler();
