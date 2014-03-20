@@ -172,6 +172,7 @@
 			elem.on("mouseup", canvasMouseUpHandler);
 			// elem.on("touchend", canvasMouseUpHandler);
 			elem.on("dblclick", canvasDblClickHandler);
+			alert(Hammer);
 			Hammer(elem).on("doubletap", function(event) {
 				alert('hello!');
 			});
