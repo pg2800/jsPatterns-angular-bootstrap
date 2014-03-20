@@ -53,7 +53,6 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 								prevY = y;
 								x = x + Math.cos(angle) * radius;
 								y = y + Math.sin(angle) * radius;
-								console.log(x + " " + y);
 								context.lineTo(x, y);
 								shadow.lineTo(x, y);
 							}
@@ -153,10 +152,6 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					shape = getShape(),
 					stroke = getStrokeColor(),
 					fill = getFillColor();
-					console.log(size);
-					console.log(shape);
-					console.log(stroke);
-					console.log(fill);
 
 					shapesAbstractFactory.newPolygon(x, y, z_index++, size, shape, stroke, fill);
 					publish("renderCanvas");

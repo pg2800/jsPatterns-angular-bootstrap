@@ -138,40 +138,35 @@
 			publish("renderCanvas");
 		}
 		function canvasMouseDownHandler(e){
-			publish("canvasMouseDown", {context:$("canvas#theCanvasJSShadow")[0], e:e});
+			publish("canvasMouseDown", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.center});
 		}
 		function canvasMousemoveHandler(e){
-			publish("canvasMousemove", {context:$("canvas#theCanvasJSShadow")[0], e:e});
+			publish("canvasMousemove", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.center});
 		}
 		function canvasMouseUpHandler(e){
-			publish("canvasMouseUp", {context:$("canvas#theCanvasJSShadow")[0], e:e});
+			// alert("release");
+			publish("canvasMouseUp", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.center});
 		}
 		function canvasDblClickHandler(e){
-			// alert("WTF!");
-			publish("canvasDblClick", {context:$("canvas#theCanvasJSShadow")[0], e:e});
+			// alert("doubleTap");
+			// console.log(e);
+			publish("canvasDblClick", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.center});
 		}
 		function removeHandler(){
 			$(window).off("resize", handler);
-			$("#theCanvasJS").off("mousedown", canvasMouseDownHandler);
-			// $("#theCanvasJS").off("", canvasMouseDownHandler);
-			$("#theCanvasJS").off("mousemove", canvasMousemoveHandler);
-			// $("#theCanvasJS").off("", canvasMousemoveHandler);
-			$("#theCanvasJS").off("mouseup", canvasMouseUpHandler);
-			// $("#theCanvasJS").off("touchend", canvasMouseUpHandler);
-			$("#theCanvasJS").off("dblclick", canvasDblClickHandler);
-			// $("#theCanvasJS").off("", canvasDblClickHandler);
+			$("#theCanvasJS").off("touch", canvasMouseDownHandler);
+			$("#theCanvasJS").off("drag", canvasMousemoveHandler);
+			$("#theCanvasJS").off("release", canvasMouseUpHandler);
+			$("#theCanvasJS").off("doubletap", canvasDblClickHandler);
 			return true;
 		}
 		var handlers = false;
 		function addHandlers(id){
 			if(handlers) return;
 			var elem = document.getElementById("theCanvasJS");
-			Hammer(elem).on("mousedown", canvasMouseDownHandler);
-			// Hammer(elem).on("press", canvasMouseDownHandler);
-			Hammer(elem).on("mousemove", canvasMousemoveHandler);
-			// Hammer(elem).on("drag", canvasMousemoveHandler);
-			Hammer(elem).on("mouseup", canvasMouseUpHandler);
-			// Hammer(elem).on("touchend", canvasMouseUpHandler);
+			Hammer(elem).on("touch", canvasMouseDownHandler);
+			Hammer(elem).on("drag", canvasMousemoveHandler);
+			Hammer(elem).on("release", canvasMouseUpHandler);
 			Hammer(elem).on("doubletap", canvasDblClickHandler);
 			handlers = true;
 		}
