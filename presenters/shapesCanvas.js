@@ -151,8 +151,8 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				function mouseDoubleClick(options){
 					e = options.e;
 					var pos = findPos(this),
-					x = x_init = e.pageX/*,*/ - pos.left,/**/
-					y = y_init = e.pageY/*,*/ - pos.top,/**/
+					x = x_init = e.pageX - pos.left,
+					y = y_init = e.pageY - pos.top,
 					size = getSize(),
 					shape = getShape(),
 					stroke = getStrokeColor(),
