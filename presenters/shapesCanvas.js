@@ -31,7 +31,7 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 							// z = this.z,
 							numOfSides = this.numOfSides,
 							angChange = deg2rad(360.0/numOfSides),
-							prevX, prevY, firstX, firstY;
+							prevX, prevY, firstX = x, firstY = y;
 
 							context = context.getContext('2d');
 							shadow = shadow.getContext('2d');
@@ -46,26 +46,16 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 							shadow.fillStyle = this.UniversalColorID;
 
 							context.lineWidth = shadow.lineWidth = 3;
+							var angle;
 							for(var i=0;i<numOfSides;i++) { 
 								angle = i * angChange;
 								prevX = x;
 								prevY = y;
 								x = x + Math.cos(angle) * radius;
 								y = y + Math.sin(angle) * radius;
-								if(i > 0) {
-									context.moveTo(prevX, prevY);
-									shadow.moveTo(prevX, prevY);
-									context.lineTo(x, y);
-									shadow.lineTo(x, y);
-								}
-								else {
-									firstX = x;
-									firstY = y;
-								}
-								if(i == numOfSides - 1) {
-									context.lineTo(firstX,firstY);
-									shadow.lineTo(firstX,firstY);
-								} 
+								console.log(x + " " + y);
+								context.lineTo(x, y);
+								shadow.lineTo(x, y);
 							}
 							context.closePath();
 							context.fill();
