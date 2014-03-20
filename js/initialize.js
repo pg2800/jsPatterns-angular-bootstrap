@@ -147,7 +147,7 @@
 			publish("canvasMouseUp", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.center});
 		}
 		function canvasDblClickHandler(e){
-			alert("WTF!");
+			console.log(e);
 			publish("canvasDblClick", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.center});
 		}
 		function removeHandler(){

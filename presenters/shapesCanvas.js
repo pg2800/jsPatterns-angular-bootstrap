@@ -98,7 +98,9 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					}
 				}
 				function findPos(obj) {
+					return $(obj).offset();
 					var curleft = 0, curtop = 0;
+					console.log(obj);
 					if (obj.offsetParent) {
 						do {
 							curleft += obj.offsetLeft;
@@ -146,13 +148,12 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				function mouseDoubleClick(options){
 					e = options.e;
 					var pos = findPos(this),
-					x = x_init = e.pageX - pos.x,
-					y = y_init = e.pageY - pos.y,
+					x = x_init = e.pageX - pos.left,
+					y = y_init = e.pageY - pos.top,
 					size = getSize(),
 					shape = getShape(),
 					stroke = getStrokeColor(),
 					fill = getFillColor();
-					alert(x+" "+y);
 
 					shapesAbstractFactory.newPolygon(x, y, z_index++, size, shape, stroke, fill);
 					publish("renderCanvas");
@@ -162,8 +163,8 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					e = options.e;
 					var context = this.getContext('2d'),
 					pos = findPos(this),
-					x = x_init = e.pageX - pos.x, 
-					y = y_init = e.pageY - pos.y, 
+					x = x_init = e.pageX - pos.left, 
+					y = y_init = e.pageY - pos.top, 
 					p = context.getImageData(x, y, 1, 1).data,
 					polygons = shapesAbstractFactory.getPolygons();
 					shape = polygons["#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6)];
@@ -173,8 +174,8 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					e = options.e;
 					if(!shape || !x_init || !y_init) return;
 					var pos = findPos(this),
-					x = e.pageX - pos.x, 
-					y = e.pageY - pos.y;
+					x = e.pageX - pos.left, 
+					y = e.pageY - pos.top;
 
 					x_init += x - x_init;
 					y_init += y - y_init;
