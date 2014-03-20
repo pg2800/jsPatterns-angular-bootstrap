@@ -148,11 +148,11 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					var pos = findPos(this),
 					x = x_init = e.pageX - pos.x,
 					y = y_init = e.pageY - pos.y,
-					alert(x+" "+y);
 					size = getSize(),
 					shape = getShape(),
 					stroke = getStrokeColor(),
 					fill = getFillColor();
+					alert(x+" "+y);
 
 					shapesAbstractFactory.newPolygon(x, y, z_index++, size, shape, stroke, fill);
 					publish("renderCanvas");
