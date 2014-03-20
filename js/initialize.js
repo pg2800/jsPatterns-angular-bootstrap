@@ -138,17 +138,17 @@
 			publish("renderCanvas");
 		}
 		function canvasMouseDownHandler(e){
-			publish("canvasMouseDown", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.center});
+			publish("canvasMouseDown", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.srcEvent});
 		}
 		function canvasMousemoveHandler(e){
-			publish("canvasMousemove", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.center});
+			publish("canvasMousemove", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.srcEvent});
 		}
 		function canvasMouseUpHandler(e){
-			publish("canvasMouseUp", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.center});
+			publish("canvasMouseUp", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.srcEvent});
 		}
 		function canvasDblClickHandler(e){
 			console.log(e);
-			publish("canvasDblClick", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.center});
+			publish("canvasDblClick", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.srcEvent});
 		}
 		function removeHandler(){
 			$(window).off("resize", handler);

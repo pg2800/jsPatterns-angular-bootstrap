@@ -39,6 +39,9 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 							context.beginPath();
 							shadow.beginPath();
 
+							// context.moveTo(x,y);
+							// shadow.moveTo(x,y);
+
 							context.strokeStyle = this.color;
 							shadow.strokeStyle = this.UniversalColorID;
 
@@ -148,12 +151,14 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				function mouseDoubleClick(options){
 					e = options.e;
 					var pos = findPos(this),
-					x = x_init = e.pageX - pos.left,
-					y = y_init = e.pageY - pos.top,
+					x = x_init = e.pageX/*,*/ - pos.left,/**/
+					y = y_init = e.pageY/*,*/ - pos.top,/**/
 					size = getSize(),
 					shape = getShape(),
 					stroke = getStrokeColor(),
 					fill = getFillColor();
+
+					console.log(x + " " +y);
 
 					shapesAbstractFactory.newPolygon(x, y, z_index++, size, shape, stroke, fill);
 					publish("renderCanvas");
