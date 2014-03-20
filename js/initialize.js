@@ -147,6 +147,7 @@
 			publish("canvasMouseUp", {context:$("canvas#theCanvasJSShadow")[0], e:e});
 		}
 		function canvasDblClickHandler(e){
+			// alert("WTF!");
 			publish("canvasDblClick", {context:$("canvas#theCanvasJSShadow")[0], e:e});
 		}
 		function removeHandler(){
@@ -165,17 +166,13 @@
 		function addHandlers(id){
 			if(handlers) return;
 			var elem = document.getElementById("theCanvasJS");
-			elem.on("mousedown", canvasMouseDownHandler);
-			// elem.on("press", canvasMouseDownHandler);
-			elem.on("mousemove", canvasMousemoveHandler);
-			// elem.on("drag", canvasMousemoveHandler);
-			elem.on("mouseup", canvasMouseUpHandler);
-			// elem.on("touchend", canvasMouseUpHandler);
-			elem.on("dblclick", canvasDblClickHandler);
-			alert(Hammer);
-			Hammer(elem).on("doubletap", function(event) {
-				alert('hello!');
-			});
+			Hammer(elem).on("mousedown", canvasMouseDownHandler);
+			// Hammer(elem).on("press", canvasMouseDownHandler);
+			Hammer(elem).on("mousemove", canvasMousemoveHandler);
+			// Hammer(elem).on("drag", canvasMousemoveHandler);
+			Hammer(elem).on("mouseup", canvasMouseUpHandler);
+			// Hammer(elem).on("touchend", canvasMouseUpHandler);
+			Hammer(elem).on("doubletap", canvasDblClickHandler);
 			handlers = true;
 		}
 		handler();
