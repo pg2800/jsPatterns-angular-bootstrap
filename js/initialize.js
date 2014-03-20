@@ -47,6 +47,7 @@
 
 	// Subscribing Canvas from shapesCanvas View to rezise the canvas.
 	// This will be executed first when the controller publishes the topic
+	// CONFLICTS: when classes are called "canvasContainer"s because the controller uses them for a special canvas.
 	({}).subscribe("shapesCanvas", function(){
 		$(window).on("resize", handler);
 		(function fixes(){
@@ -169,8 +170,12 @@
 			handlers = true;
 		}
 		handler();
+	});
 
-
+	// This will be executed first when the controller publishes the topic
+	({}).subscribe("historyStack", function (){
+		$(".pick-a-color").pickAColor();
+		console.log("WTF!");
 	});
 
 })(jQuery, Hammer);
