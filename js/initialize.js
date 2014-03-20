@@ -1,4 +1,4 @@
-(function($){
+(function($, Hammer){
 	// Publish && Subscribe
 	(function publishSubscribe(){
 		var topics = {};
@@ -156,7 +156,7 @@
 			$("#theCanvasJS").off("mousemove", canvasMousemoveHandler);
 			// $("#theCanvasJS").off("", canvasMousemoveHandler);
 			$("#theCanvasJS").off("mouseup", canvasMouseUpHandler);
-			// $("#theCanvasJS").off("", canvasMouseUpHandler);
+			// $("#theCanvasJS").off("touchend", canvasMouseUpHandler);
 			$("#theCanvasJS").off("dblclick", canvasDblClickHandler);
 			// $("#theCanvasJS").off("", canvasDblClickHandler);
 			return true;
@@ -164,14 +164,17 @@
 		var handlers = false;
 		function addHandlers(id){
 			if(handlers) return;
-			$("#theCanvasJS").on("mousedown", canvasMouseDownHandler);
-			// $("#theCanvasJS").on("press", canvasMouseDownHandler);
-			$("#theCanvasJS").on("mousemove", canvasMousemoveHandler);
-			// $("#theCanvasJS").on("drag", canvasMousemoveHandler);
-			$("#theCanvasJS").on("mouseup", canvasMouseUpHandler);
-			// $("#theCanvasJS").on("", canvasMouseUpHandler);
-			$("#theCanvasJS").on("dblclick", canvasDblClickHandler);
-			$("#theCanvasJS").on("doubletap", canvasDblClickHandler);
+			var elem = document.getElementById("theCanvasJS");
+			elem.on("mousedown", canvasMouseDownHandler);
+			// elem.on("press", canvasMouseDownHandler);
+			elem.on("mousemove", canvasMousemoveHandler);
+			// elem.on("drag", canvasMousemoveHandler);
+			elem.on("mouseup", canvasMouseUpHandler);
+			// elem.on("touchend", canvasMouseUpHandler);
+			elem.on("dblclick", canvasDblClickHandler);
+			Hammer(elem).on("doubletap", function(event) {
+				alert('hello!');
+			});
 			handlers = true;
 		}
 		handler();
@@ -179,4 +182,4 @@
 
 	});
 
-})(jQuery);
+})(jQuery, Hammer);
