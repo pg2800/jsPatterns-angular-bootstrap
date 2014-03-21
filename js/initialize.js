@@ -186,14 +186,9 @@
 		$('.slider').slider({
 			range: true,
 			min: 0,
-			max: 500,
-			value: [ 0, 500 ]
+			max: 10
 		});
-		$('#ex1').slider({
-			formater: function(value) {
-				return 'Current value: ' + value;
-			}
-		});
+
 	});
 
 })(jQuery, Hammer);

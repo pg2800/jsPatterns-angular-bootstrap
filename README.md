@@ -6,5 +6,6 @@ Frontend web site that include three exercises to practice JS patterns. Meanwhil
 2. A bit of HammerJS multitouch functionality 
 3. Bootstrap
 4. Pick-A-Color JS (with a dependency to tinycolor JS)
+5. Bootstrap-Slider
 
 To view this site, you can go to: http://pg2800.github.io/jsPatterns-angular-bootstrap/#/
