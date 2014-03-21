@@ -175,7 +175,6 @@
 	// This will be executed first when the controller publishes the topic
 	({}).subscribe("historyStack", function (){
 		$(".pick-a-color").pickAColor();
-		console.log("WTF!");
 	});
 
 })(jQuery, Hammer);
