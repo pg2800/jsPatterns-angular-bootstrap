@@ -40,3 +40,6 @@ body {
 /*.fix-width-margin {
 	width: 100%;
 }*/
+#ex1Slider .slider-selection {
+	background: #BABABA;
+}
