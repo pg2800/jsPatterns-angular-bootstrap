@@ -7,5 +7,7 @@ Frontend web site that include three exercises to practice JS patterns. Meanwhil
 3. Bootstrap
 4. Pick-A-Color JS (with a dependency to tinycolor JS)
 5. Bootstrap-Slider
+6. GLYPHICONS :: http://glyphicons.com/
 
 To view this site, you can go to: http://pg2800.github.io/jsPatterns-angular-bootstrap/#/
+
