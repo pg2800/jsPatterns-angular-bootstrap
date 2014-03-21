@@ -174,7 +174,15 @@
 
 	// This will be executed first when the controller publishes the topic
 	({}).subscribe("historyStack", function (){
-		$(".pick-a-color").pickAColor();
+		$(".pick-a-color").pickAColor({
+			showSpectrum            : true,
+			showSavedColors         : true,
+			saveColorsPerElement    : false,
+			fadeMenuToggle          : true,
+			showHexInput            : true,
+			showBasicColors         : true,
+			allowBlank              : false
+		});
 	});
 
 })(jQuery, Hammer);
