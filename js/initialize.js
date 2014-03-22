@@ -148,7 +148,7 @@
 			publish("canvasMouseUp", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.srcEvent});
 		}
 		function canvasDblClickHandler(e){
-			console.log(e);
+			// console.log(e);
 			publish("canvasDblClick", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.srcEvent});
 		}
 		function removeHandler(){
@@ -186,7 +186,26 @@
 		$('.slider').slider({
 			range: true,
 			min: 0,
-			max: 10
+			max: 10,
+			value: 5
+		});
+		$(document).on("keydown", function(e){
+			if( (e.which === 90 && e.ctrlKey && e.shiftKey) || 
+				(e.which === 89 && e.ctrlKey) ){
+				publish("redo");
+			}
+			else if( e.which === 90 && e.ctrlKey ){
+				publish("undo");
+			}          
+		}); 
+		Hammer(document.getElementById("shapesPanelBody")).on("doubletap", function (){
+			publish("addDiv", {
+				border_color: $("#border-color input").val(),
+				background_color: $("#background-color input").val(),
+				border_thickness: $("#border-thickness").val(),
+				round_edges: $("#round-edges").val(),
+				parentElement: this
+			});
 		});
 
 	});

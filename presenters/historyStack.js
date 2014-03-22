@@ -4,10 +4,10 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 		run: function(){
 			var historyStack = (function(){
 				var currentNode;
-				function ListNode(command, undo){
+				function ListNode(commandFn, undoFn){
 					this.previous = null;
-					this.redo = command || null;
-					this.undo = undo || null;
+					this.redo = commandFn || null;
+					this.undo = undoFn || null;
 					this.next = null;
 				}
 				currentNode = new ListNode();
@@ -19,8 +19,8 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 						futureNode = futureNode.next; // moves to next node
 					}
 				}
-				function addNode(command, undo){
-					var node = new ListNode(command, undo);
+				function addNode(commandFn, undoFn){
+					var node = new ListNode(commandFn, undoFn);
 					removeCurrentFutureNodes();
 					currentNode.next = node;
 					node.previous = currentNode;
@@ -39,7 +39,7 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 					currentNode = currentNode.next;
 				}
 				return {
-					addTimePeriod: addNode,
+					store: addNode,
 					undo: undo,
 					redo: redo
 				};
@@ -52,29 +52,75 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 			var commandPattern = (function(){
 				var divFactory = (function(){
 					var divs = {};
-					function Div(options){
-						Object.defineProperty("Uid", {value: Guid()});
-						this.border_color = options.border_color;
-						this.background_color = options.background_color;
-						this.border_thickness = options.border_thickness;
-						this.round_edges = options.round_edges;
-					}
-					function newDiv(options){
-						var div = new Div(options);
-						divs[div.Uid] = div;
-						return div;
-					}
-					function getDiv(Uid){
-						return divs[Uid];
-					}
+					var counter = 1;
+					function invertColor(hexTripletColor) {
+						var color = hexTripletColor;
+				    color = color.substring(1);           // remove #
+				    color = parseInt(color, 16);          // convert to integer
+				    color = 0xFFFFFF ^ color;             // invert three bytes
+				    color = color.toString(16);           // convert to hex
+				    color = ("000000" + color).slice(-6); // pad with leading zeros
+				    color = "#" + color;                  // prepend #
+				    return color;
+				  }
+				  function Div(options){
+				  	var self = this;
+				  	Object.defineProperty(self, "Uid", {value: Guid()});
+				  	self.border_color = options.border_color;
+				  	self.background_color = options.background_color;
+				  	self.border_thickness = options.border_thickness;
+				  	self.round_edges = options.round_edges;
+				  	self.HTMLelement = (function(){
+				  		var div = document.createElement("div");
+				  		$(div).attr("class", "div text-center");
+				  		$(div).attr("id", self.Uid);
+				  		$(div).css("border-color", "#"+self.border_color);
+				  		$(div).css("background-color", "#"+self.background_color);
+				  		$(div).css("color", invertColor("#"+self.background_color));
+				  		$(div).css("border-width", self.border_thickness+"px");
+				  		$(div).css("border-radius", self.round_edges+"px");
+				  		$(div).append(document.createTextNode(counter));
+				  		return div;
+				  	})();
+				  }
+				  function newDiv(options){
+				  	counter++;
+				  	var div = new Div(options);
+				  	divs[div.Uid] = div;
+				  	return div;
+				  }
+				  function getDiv(Uid){
+				  	return divs[Uid];
+				  }
+				  function removeDiv(Uid){
+				  	counter--;
+				  	delete divs[Uid];
+				  }
 					return { // Revealing module pattern
 						newDiv: newDiv,
-						getDiv: getDiv
+						getDiv: getDiv,
+						removeDiv: removeDiv
 					}
 				})();
 
-				function addDiv(){}
-				function addDiv_Undo(){}
+				function addDiv(options){
+					var div = divFactory.newDiv(options),
+					undoOptions = (options.divUid = div.Uid, options);
+					options.parentElement.appendChild(div.HTMLelement);
+					return undoOptions;
+				}
+				function addDiv_Undo(options){
+					console.log(options);
+					var div = document.getElementById(options.divUid);
+					div.parentElement.removeChild(div);
+					divFactory.removeDiv(options.divUid);
+				}
+				function moveTo(options){
+
+				}
+				function moveTo_Undo(options){
+
+				}
 
 				var macros = {}; 
 				function record_Macro(){}
@@ -85,22 +131,26 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 				var commands = {
 					addDiv: addDiv,
 					applyMacro: applyMacro
-				}
-				var undos = {
+				},
+				undos = { // must be equal than the commands
 					addDiv: addDiv_Undo,
 					applyMacro: applyMacro_Undo
-				}
-				function execute(command, options, context){ // this is also a facade
-					context = context || {};
-					var undo = createUndo(command, options, context),
-					redo = function (){
-						if(commands[command]) return commands[command].call(context, options);
-					};
+				};
+				function execute(command, options){ // this is also a facade
+					if(!commands[command]) return;
+					var undoOptions = commands[command](options);
+					function _do() { commands[command](options); }
+					function _undo() { undos[command](undoOptions); }
+					historyStack.store(_do, _undo);
 				}
 				return {
 					execute: execute
-				}
+				};
 			})();
+
+			({}).subscribe("addDiv", function(options){
+				commandPattern.execute("addDiv", options);
+			});
 
 			publish("historyStack");
 		}
