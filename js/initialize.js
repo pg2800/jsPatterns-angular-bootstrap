@@ -190,14 +190,14 @@
 			value: 5
 		});
 		$(document).on("keydown", function(e){
-			if( (e.which === 90 && e.ctrlKey && e.shiftKey) || 
-				(e.which === 89 && e.ctrlKey) ){
+			if( (e.which === 90 && e.ctrlKey && e.shiftKey) || (e.which === 89 && e.ctrlKey) ){
 				publish("redo");
 			}
 			else if( e.which === 90 && e.ctrlKey ){
 				publish("undo");
 			}          
 		}); 
+
 		Hammer(document.getElementById("shapesPanelBody")).on("doubletap", function (){
 			publish("addDiv", {
 				border_color: $("#border-color input").val(),
@@ -207,6 +207,37 @@
 				parentElement: this
 			});
 		});
+		var wrapper = document.getElementById("panelWrapper");
+		Hammer(wrapper).on("dragstart", function (e){
+			if(!e.target) return;
+			publish("draggingStarted", {
+				event: e,
+				target: e.target,
+				targetID: $(e.target).attr("id"),
+				selectedPanel: this,
+				parent: $(e.target).parent()
+			});
+		});
+		Hammer(wrapper).on("drag", function (e){
+			if(!e.target) return;
+			publish("dragging", {
+				event: e,
+				targetID: $(e.target).attr("id"),
+				selectedPanel: this,
+				parent: $(e.target).parent()
+			});
+		});
+		Hammer(wrapper).on("dragend", function (e){
+			if(!e.target) return;
+			console.log(e);
+			publish("draggingEnded", {
+				event: e,
+				targetID: $(e.target).attr("id"),
+				selectedPanel: this,
+				parent: $(e.target).parent()
+			});
+		});
+
 
 	});
 

@@ -72,7 +72,7 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 				  	self.round_edges = options.round_edges;
 				  	self.HTMLelement = (function(){
 				  		var div = document.createElement("div");
-				  		$(div).attr("class", "div text-center");
+				  		$(div).attr("class", "div div-draggable text-center");
 				  		$(div).attr("id", self.Uid);
 				  		$(div).css("border-color", "#"+self.border_color);
 				  		$(div).css("background-color", "#"+self.background_color);
@@ -103,6 +103,50 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 					}
 				})();
 
+				// The subscribers to the drag goes in here because:
+				// The dragging events need access to the divs and I did not want to create an access to the outside of the divFactory through the command pattern
+				var draggingDiv, insideModifyingArea, parent, edditing,
+				shapesPanel = document.getElementById("shapesPanel"),
+				edditingPanel = document.getElementById("modifyingPanel");
+				({}).subscribe("draggingStarted", function (event){
+					draggingDiv = divFactory.getDiv(event.targetID);
+					if(!draggingDiv || !event.target) return;
+					draggingDiv = event.target;
+					$(draggingDiv).css("position", "absolute");
+					parent = $(event.parent).offset();
+					edditing = $(edditingPanel).offset();
+				});
+				({}).subscribe("dragging", function (event){
+					if(!draggingDiv || !event.event) return;
+					event = event.event.gesture.srcEvent;
+					var x = event.pageX - parent.left, y = event.pageY - parent.top;
+
+					draggingDiv.style.left = x - 29 +"px";
+					draggingDiv.style.top = y - 5 +"px";
+					insideModifyingArea = (x<=edditing.right && x>=edditing.left && y>=edditing.top && y<=edditing.bottom)? true : false;
+				});
+				({}).subscribe("draggingEnded", function (event){
+					if(!draggingDiv) return;
+					if(insideModifyingArea){
+						if(event.parent != edditingPanel) {
+							publish("moveDiv", {
+								draggingTarget: draggingDiv,
+								to: edditingPanel
+							});
+						}
+					} else {
+						if(event.parent == edditingPanel) {
+							publish("moveDiv", {
+								draggingTarget: draggingDiv,
+								to: shapesPanel
+							});
+						}
+					}
+					draggingDiv.style.position = "";
+					draggingDiv = undefined;
+					insideModifyingArea = undefined;
+				});
+				//
 				function addDiv(options){
 					var div = divFactory.newDiv(options),
 					undoOptions = (options.divUid = div.Uid, options);
@@ -110,13 +154,12 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 					return undoOptions;
 				}
 				function addDiv_Undo(options){
-					console.log(options);
 					var div = document.getElementById(options.divUid);
 					div.parentElement.removeChild(div);
 					divFactory.removeDiv(options.divUid);
 				}
 				function moveTo(options){
-
+					var div = document.getElementById(options.divUid);
 				}
 				function moveTo_Undo(options){
 
@@ -124,7 +167,6 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 
 				var macros = {}; 
 				function record_Macro(){}
-
 				function applyMacro(){}
 				function applyMacro_Undo(){}
 
@@ -148,9 +190,13 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 				};
 			})();
 
-			({}).subscribe("addDiv", function(options){
+			({}).subscribe("addDiv", function (options){
 				commandPattern.execute("addDiv", options);
 			});
+			({}).subscribe("moveDiv", function (options){
+				console.log(options);
+			});
+			
 
 			publish("historyStack");
 		}

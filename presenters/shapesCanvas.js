@@ -102,15 +102,6 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 				}
 				function findPos(obj) {
 					return $(obj).offset();
-					var curleft = 0, curtop = 0;
-					console.log(obj);
-					if (obj.offsetParent) {
-						do {
-							curleft += obj.offsetLeft;
-							curtop += obj.offsetTop;
-						} while (obj = obj.offsetParent);
-						return { x: curleft, y: curtop };
-					}
 				}
 				function rgbToHex(r, g, b) {
 					if (r > 255 || g > 255 || b > 255) throw "Invalid color component";
