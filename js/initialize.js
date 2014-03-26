@@ -173,6 +173,52 @@
 	});
 
 	// This will be executed first when the controller publishes the topic
+	function doubletap(e){
+		publish("addDiv", {
+			border_color: $("#border-color input").val(),
+			background_color: $("#background-color input").val(),
+			border_thickness: $("#border-thickness").val(),
+			round_edges: $("#round-edges").val(),
+			parentElement: this
+		});
+	}
+	function dragstart(e){
+		if(!e.target) return;
+		publish("draggingStarted", {
+			event: e,
+			target: e.target,
+			targetID: $(e.target).attr("id"),
+			selectedPanel: this,
+			parent: $(e.target).parent()
+		});
+	}
+	function drag(e){
+		if(!e.target) return;
+		publish("dragging", {
+			event: e,
+			targetID: $(e.target).attr("id"),
+			selectedPanel: this,
+			parent: $(e.target).parent()
+		});
+	}
+	function dragend(e){
+		if(!e.target) return;
+		publish("draggingEnded", {
+			event: e,
+			targetID: $(e.target).attr("id"),
+			selectedPanel: this,
+			parent: $(e.target).parent()
+		});
+	}
+	function keydown(e){
+		if(event.which == 13 || event.keyCode == 13) return doubletap.apply(document.getElementById("shapesPanelBody"));
+		if( (e.which === 90 && e.ctrlKey && e.shiftKey) || (e.which === 89 && e.ctrlKey) ){
+			publish("redo");
+		}
+		else if( e.which === 90 && e.ctrlKey ){
+			publish("undo");
+		}          
+	}
 	({}).subscribe("historyStack", function (){
 		$(".pick-a-color").pickAColor({
 			showSpectrum            : true,
@@ -189,55 +235,58 @@
 			max: 10,
 			value: 5
 		});
-		$(document).on("keydown", function(e){
-			if( (e.which === 90 && e.ctrlKey && e.shiftKey) || (e.which === 89 && e.ctrlKey) ){
-				publish("redo");
-			}
-			else if( e.which === 90 && e.ctrlKey ){
-				publish("undo");
-			}          
-		}); 
 
-		Hammer(document.getElementById("shapesPanelBody")).on("doubletap", function (){
-			publish("addDiv", {
-				border_color: $("#border-color input").val(),
-				background_color: $("#background-color input").val(),
-				border_thickness: $("#border-thickness").val(),
-				round_edges: $("#round-edges").val(),
-				parentElement: this
-			});
-		});
 		var wrapper = document.getElementById("panelWrapper");
-		Hammer(wrapper).on("dragstart", function (e){
-			if(!e.target) return;
-			publish("draggingStarted", {
-				event: e,
-				target: e.target,
-				targetID: $(e.target).attr("id"),
-				selectedPanel: this,
-				parent: $(e.target).parent()
-			});
-		});
-		Hammer(wrapper).on("drag", function (e){
-			if(!e.target) return;
-			publish("dragging", {
-				event: e,
-				targetID: $(e.target).attr("id"),
-				selectedPanel: this,
-				parent: $(e.target).parent()
-			});
-		});
-		Hammer(wrapper).on("dragend", function (e){
-			if(!e.target) return;
-			console.log(e);
-			publish("draggingEnded", {
-				event: e,
-				targetID: $(e.target).attr("id"),
-				selectedPanel: this,
-				parent: $(e.target).parent()
-			});
-		});
 
+		$(document).on("keydown", keydown); 
+		Hammer(document.getElementById("shapesPanelBody")).on("doubletap", doubletap);
+		Hammer(wrapper).on("dragstart", dragstart);
+		Hammer(wrapper).on("drag", drag);
+		Hammer(wrapper).on("dragend", dragend);
+
+		(function OtherImplementationOfTheDraggable(){
+			// w3schools
+			// jQuery.event.props.push ('dataTransfer');
+			// $("#id").on("drop", drop);
+			// $("#id").on("dragover", allowDrop);
+			// function allowDrop(ev)
+			// {
+			// 	ev.preventDefault();
+			// }
+			// function drop(ev)
+			// {
+			// 	ev.preventDefault();
+			// 	var data = ev.dataTransfer.getData("Text");
+			// 	ev.target.appendChild(document.getElementById(data));
+			// }
+			// // We need to add this one to the element we want to drag
+			// // Also that element must have an attribute draggable="true"
+			// function drag(ev)
+			// {
+			// 	ev.dataTransfer.setData("Text",ev.target.id);
+			// }
+
+			// Ivans Code:
+			// jQuery.event.props.push ('dataTransfer');
+			// angular.module ('main', [])
+			// .value ('dragFn', function (ev) {
+			// 	ev.dataTransfer.setData("Text", ev.target.id);
+			// })
+			// .controller('mainCtrl', function () {
+
+			// })
+			// .directive('dragMe', function (dragFn) {
+			// 	return {
+			// 		restrict: 'A',
+			// 		link: function (scope, el, attr) {
+			// 			el.prop ('draggable', true);
+
+			// 			el.on ('dragstart', dragFn);
+			// 		}
+			// 	}
+			// });
+			//
+		})();
 
 	});
 

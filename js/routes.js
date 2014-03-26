@@ -2,16 +2,21 @@
 	angular.module("patterns", /*dependencies*/["ngRoute", "HomeModule", "SearchFilterModule", "ShapesCanvasModule", "HistoryStackModule"])
 
 	.controller("HomeController", ["HomeService", function (HomeService){
+		publish("leaving");
 		HomeService.run();
 	}])
 	.controller("SearchFilterController", ["SearchFilterService", function (SearchFilterService){
+		publish("leaving");
 		SearchFilterService.run();
 	}])
 	.controller("ShapesCanvasController", ["ShapesCanvasService", function (ShapesCanvasService){
+		publish("leaving");
 		ShapesCanvasService.run();
 	}])
 	.controller("HistoryStackController", ["HistoryStackService", function (HistoryStackService){
+		publish("leaving");
 		HistoryStackService.run();
+		publish("historyStack");
 	}])
 
 	.config(["$routeProvider", function($routeProvider){

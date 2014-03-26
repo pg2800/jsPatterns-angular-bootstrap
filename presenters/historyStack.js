@@ -2,8 +2,15 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 .factory("HistoryStackService", [function(){
 	return {
 		run: function(){
+
 			var historyStack = (function(){
 				var currentNode;
+				({}).subscribe("leaving", function eraseHISTORY(){
+					removeCurrentFutureNodes();
+					removeCurrentPastNodes();
+					currentNode = new ListNode();
+					console.log(currentNode);
+				});
 				function ListNode(commandFn, undoFn){
 					this.previous = null;
 					this.redo = commandFn || null;
@@ -11,6 +18,14 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 					this.next = null;
 				}
 				currentNode = new ListNode();
+				function removeCurrentPastNodes(){
+					var pastNode = currentNode.previous;
+					while(pastNode){
+						pastNode.next.previous = null // forces previous node to stop pointing at this node
+						pastNode.next = null; // forces this node to stop pointing at previous node
+						pastNode = pastNode.previous; // moves to next node
+					}
+				}
 				function removeCurrentFutureNodes(){
 					var futureNode = currentNode.next;
 					while(futureNode){
@@ -52,7 +67,11 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 			var commandPattern = (function(){
 				var divFactory = (function(){
 					var divs = {};
-					var counter = 1;
+					var counter = 0;
+					({}).subscribe("leaving", function(){
+						divs = {};
+						counter = 0;
+					});
 					function invertColor(hexTripletColor) {
 						var color = hexTripletColor;
 				    color = color.substring(1);           // remove #
@@ -115,6 +134,8 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 					$(draggingDiv).css("position", "absolute");
 					parent = $(event.parent).offset();
 					edditing = $(edditingPanel).offset();
+					edditing.bottom = edditing.top + Number($(edditingPanel).css("height").replace("px",""));
+					edditing.right = edditing.left + Number($(edditingPanel).css("width").replace("px",""));
 				});
 				({}).subscribe("dragging", function (event){
 					if(!draggingDiv || !event.event) return;
@@ -123,7 +144,7 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 
 					draggingDiv.style.left = x - 29 +"px";
 					draggingDiv.style.top = y - 5 +"px";
-					insideModifyingArea = (x<=edditing.right && x>=edditing.left && y>=edditing.top && y<=edditing.bottom)? true : false;
+					insideModifyingArea = (event.pageX<=edditing.right && event.pageX>=edditing.left && event.pageY>=edditing.top && event.pageY<=edditing.bottom)? true : false;
 				});
 				({}).subscribe("draggingEnded", function (event){
 					if(!draggingDiv) return;
@@ -185,7 +206,7 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 					function _undo() { undos[command](undoOptions); }
 					historyStack.store(_do, _undo);
 				}
-				return {
+				return { 
 					execute: execute
 				};
 			})();
@@ -198,7 +219,6 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 			});
 			
 
-			publish("historyStack");
 		}
 	};
 }]);
