@@ -219,6 +219,13 @@
 			publish("undo");
 		}          
 	}
+	function release(e){
+		var obj = {};
+		obj[$(e.target).attr("name")] = $(e.target).val(); 
+		publish("saveRECstep", obj);
+		publish("decorate", obj);
+	}
+
 	({}).subscribe("historyStack", function (){
 		$(".pick-a-color").pickAColor({
 			showSpectrum            : true,
@@ -243,6 +250,11 @@
 		Hammer(wrapper).on("dragstart", dragstart);
 		Hammer(wrapper).on("drag", drag);
 		Hammer(wrapper).on("dragend", dragend);
+
+		$("#background-color input").on("change", release);
+		$("#border-color input").on("change", release);
+		$('#border-thickness').slider().on("slideStop", release);
+		$('#round-edges').slider().on("slideStop", release);
 
 		(function OtherImplementationOfTheDraggable(){
 			// w3schools
