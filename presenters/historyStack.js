@@ -1,16 +1,16 @@
+var subscribed = false;
 angular.module("HistoryStackModule", [/*dependencies*/])
 .factory("HistoryStackService", [function(){
 	return {
 		run: function(){
-
 			var historyStack = (function(){
 				var currentNode;
-				({}).subscribe("leaving", function eraseHISTORY(){
+				function eraseHISTORY(){
 					removeCurrentFutureNodes();
 					removeCurrentPastNodes();
 					currentNode = new ListNode();
 					console.log(currentNode);
-				});
+				}
 				function ListNode(commandFn, undoFn){
 					this.previous = null;
 					this.redo = commandFn || null;
@@ -61,19 +61,20 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 			})();
 
 			//subscribe to undo and redo events
-			historyStack.subscribe("undo", "undo");
-			historyStack.subscribe("redo", "redo");
+			if(!subscribed) historyStack.subscribe("undo", "undo");
+			if(!subscribed) historyStack.subscribe("redo", "redo");
+			if(!subscribed) historyStack.subscribe("leaving", "eraseHISTORY");
 
 			var commandPattern = (function(){
 				var divFactory = (function(){
 					var divs = {};
 					var counter = 0;
-					({}).subscribe("leaving", function(){
+					if(!subscribed) ({}).subscribe("leaving", function(){
 						divs = {};
 						counter = 0;
 					});
-					function invertColor(hexTripletColor) {
-						var color = hexTripletColor;
+						function invertColor(hexTripletColor) {
+							var color = hexTripletColor;
 				    color = color.substring(1);           // remove #
 				    color = parseInt(color, 16);          // convert to integer
 				    color = 0xFFFFFF ^ color;             // invert three bytes
@@ -84,7 +85,7 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 				  }
 				  function Div(options){
 				  	var self = this;
-				  	Object.defineProperty(self, "Uid", {value: Guid()});
+				  	Object.defineProperty(self, "Uid", {value: counter});
 				  	self.border_color = options.border_color;
 				  	self.background_color = options.background_color;
 				  	self.border_thickness = options.border_thickness;
@@ -126,18 +127,21 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 				// The dragging events need access to the divs and I did not want to create an access to the outside of the divFactory through the command pattern
 				var draggingDiv, insideModifyingArea, parent, edditing,
 				shapesPanel = document.getElementById("shapesPanel"),
-				edditingPanel = document.getElementById("modifyingPanel");
-				({}).subscribe("draggingStarted", function (event){
+				editingPanel = document.getElementById("modifyingPanel"),
+				shapesPanelBody = document.getElementById("shapesPanelBody"),
+				editingPanelBody = document.getElementById("modifyingPanelBody");
+				if(!subscribed) ({}).subscribe("draggingStarted", function (event){
 					draggingDiv = divFactory.getDiv(event.targetID);
 					if(!draggingDiv || !event.target) return;
 					draggingDiv = event.target;
 					$(draggingDiv).css("position", "absolute");
 					parent = $(event.parent).offset();
-					edditing = $(edditingPanel).offset();
-					edditing.bottom = edditing.top + Number($(edditingPanel).css("height").replace("px",""));
-					edditing.right = edditing.left + Number($(edditingPanel).css("width").replace("px",""));
+					edditing = $(editingPanel).offset();
+					edditing.bottom = edditing.top + Number($(editingPanel).css("height").replace("px",""));
+					edditing.right = edditing.left + Number($(editingPanel).css("width").replace("px",""));
 				});
-				({}).subscribe("dragging", function (event){
+				//	
+				if(!subscribed) ({}).subscribe("dragging", function (event){
 					if(!draggingDiv || !event.event) return;
 					event = event.event.gesture.srcEvent;
 					var x = event.pageX - parent.left, y = event.pageY - parent.top;
@@ -146,20 +150,23 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 					draggingDiv.style.top = y - 5 +"px";
 					insideModifyingArea = (event.pageX<=edditing.right && event.pageX>=edditing.left && event.pageY>=edditing.top && event.pageY<=edditing.bottom)? true : false;
 				});
-				({}).subscribe("draggingEnded", function (event){
+				//
+				if(!subscribed) ({}).subscribe("draggingEnded", function (event){
 					if(!draggingDiv) return;
 					if(insideModifyingArea){
-						if(event.parent != edditingPanel) {
+						if(event.parent != editingPanel) {
 							publish("moveDiv", {
-								draggingTarget: draggingDiv,
-								to: edditingPanel
+								draggingTarget: $(draggingDiv).attr("id"),
+								to: editingPanelBody,
+								from: shapesPanelBody
 							});
 						}
 					} else {
-						if(event.parent == edditingPanel) {
+						if(event.parent == editingPanel) {
 							publish("moveDiv", {
-								draggingTarget: draggingDiv,
-								to: shapesPanel
+								draggingTarget: $(draggingDiv).attr("id"),
+								to: shapesPanelBody,
+								from: editingPanelBody
 							});
 						}
 					}
@@ -180,10 +187,20 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 					divFactory.removeDiv(options.divUid);
 				}
 				function moveTo(options){
-					var div = document.getElementById(options.divUid);
+					var div = $("#" + options.draggingTarget),
+					appendTo = options.to,
+					movedFrom = options.from,
+					undoOptions = (options.to = movedFrom, options.from = appendTo, options);
+					$(appendTo).append(div);
+					return undoOptions;
 				}
 				function moveTo_Undo(options){
-
+					var div = $("#" + options.draggingTarget),
+					appendTo = options.to,
+					movedFrom = options.from,
+					undoOptions = (options.to = movedFrom, options.from = appendTo, options);
+					$(appendTo).append(div);
+					return undoOptions;
 				}
 
 				var macros = {}; 
@@ -193,11 +210,13 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 
 				var commands = {
 					addDiv: addDiv,
-					applyMacro: applyMacro
+					applyMacro: applyMacro,
+					moveTo: moveTo
 				},
 				undos = { // must be equal than the commands
 					addDiv: addDiv_Undo,
-					applyMacro: applyMacro_Undo
+					applyMacro: applyMacro_Undo,
+					moveTo: moveTo_Undo
 				};
 				function execute(command, options){ // this is also a facade
 					if(!commands[command]) return;
@@ -211,14 +230,15 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 				};
 			})();
 
-			({}).subscribe("addDiv", function (options){
+			if(!subscribed) ({}).subscribe("addDiv", function (options){
 				commandPattern.execute("addDiv", options);
 			});
-			({}).subscribe("moveDiv", function (options){
-				console.log(options);
+			//
+			if(!subscribed) ({}).subscribe("moveDiv", function (options){
+				commandPattern.execute("moveTo", options);
 			});
-			
-
+			//
+			subscribed = true;
 		}
 	};
 }]);

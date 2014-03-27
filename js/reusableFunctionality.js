@@ -72,8 +72,8 @@ window.extend = function(toObj, fromObj){
 		.substring(1);
 	}
 
-	window.Guid = function () {
-		return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-		s4() + '-' + s4() + s4() + s4();
-	};
+	// window.Guid = function () {
+	// 	return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+	// 	s4() + '-' + s4() + s4() + s4();
+	// };
 })();
