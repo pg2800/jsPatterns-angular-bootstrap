@@ -223,7 +223,7 @@
 		var obj = {};
 		obj.name = $(e.target).attr("name");
 		obj.val = $(e.target).val();
-		publish("saveRECstep", obj);
+		publish("RECstep", obj);
 		publish("decorate", obj);
 	}
 

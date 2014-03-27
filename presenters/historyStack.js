@@ -65,7 +65,6 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 			if(!subscribed) historyStack.subscribe("redo", "redo");
 			if(!subscribed) historyStack.subscribe("leaving", "eraseHISTORY");
 
-			var recording = false, macros = {};
 			var commandPattern = (function(){
 				var divFactory = (function(){
 					var divs = {};
@@ -206,27 +205,53 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 
 
 				function decorate(options){
-					// var divs = $("#modifyingPanelBody div");
-					var ret = {
-						propName: options.name,
-						propVal: options[propName]
+					// options = {element:..., name:..., val:...}
+					var div = document.getElementById(options.id),
+					ret = {
+						id: options.id
+						name: options.name,
+						val: $(div).css(options.name);
 					}
-					// Aqui me quede
-					var div = options.element,
-					propName = options.name,
-					propVal = options.val;
 
-					divs.each(function(index){
-
-					});
+					$(div).css(options.name, options.val);
+					return ret;
 				}
 				function decorate_undo(options){
-
+					var div = document.getElementById(options.id);
+					$(div).css(options.name, options.val);
 				}
+				var recording = false, macros = {};
+				// macros = {
+				// 	1: [{property: .. , value: ..}, {property: .. , value: ..}]
+				// }
 				function record_Macro(){}
 				function applyMacro(){}
 				function applyMacro_Undo(){}
 
+
+				if(!subscribed) ({}).subscribe("decorate", function (options){
+					var divs = $("#modifyingPanelBody div");
+					divs.each(function (div){
+						options.element = $(div).attr("id");
+						commandPattern.execute("decorate", options);
+					});
+				});
+				//
+				if(!subscribed) ({}).subscribe("decorateMacro", function (options){
+					var macro = macros[macro];
+					if(!macro) return;
+					macro.forEach(function (step){
+						publish("decorate", {
+							name: step.property,
+							val: step.value
+						});
+					});
+				});
+				// 
+				if(!subscribed) ({}).subscribe("saveRECstep", function (options){
+					commandPattern.execute("RECstep", options);
+				});
+				//
 				var commands = {
 					addDiv: addDiv,
 					applyMacro: applyMacro,
@@ -257,17 +282,6 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 			//
 			if(!subscribed) ({}).subscribe("moveDiv", function (options){
 				commandPattern.execute("moveTo", options);
-			});
-			//
-			if(!subscribed) ({}).subscribe("decorate", function (options){
-				for decorations in macro
-					for divs in modifiyingPanel
-						do decorate
-					commandPattern.execute("decorate", options);
-				});
-			//
-			if(!subscribed) ({}).subscribe("saveRECstep", function (options){
-				commandPattern.execute("saveRECstep", options);
 			});
 			//
 			subscribed = true;
