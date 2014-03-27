@@ -221,7 +221,8 @@
 	}
 	function release(e){
 		var obj = {};
-		obj[$(e.target).attr("name")] = $(e.target).val(); 
+		obj.name = $(e.target).attr("name");
+		obj.val = $(e.target).val();
 		publish("saveRECstep", obj);
 		publish("decorate", obj);
 	}

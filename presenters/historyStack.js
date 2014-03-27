@@ -65,6 +65,7 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 			if(!subscribed) historyStack.subscribe("redo", "redo");
 			if(!subscribed) historyStack.subscribe("leaving", "eraseHISTORY");
 
+			var recording = false, macros = {};
 			var commandPattern = (function(){
 				var divFactory = (function(){
 					var divs = {};
@@ -203,7 +204,25 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 					return undoOptions;
 				}
 
-				var macros = {}; 
+
+				function decorate(options){
+					// var divs = $("#modifyingPanelBody div");
+					var ret = {
+						propName: options.name,
+						propVal: options[propName]
+					}
+					// Aqui me quede
+					var div = options.element,
+					propName = options.name,
+					propVal = options.val;
+
+					divs.each(function(index){
+
+					});
+				}
+				function decorate_undo(options){
+
+				}
 				function record_Macro(){}
 				function applyMacro(){}
 				function applyMacro_Undo(){}
@@ -211,12 +230,14 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 				var commands = {
 					addDiv: addDiv,
 					applyMacro: applyMacro,
-					moveTo: moveTo
+					moveTo: moveTo,
+					decorate: decorate
 				},
 				undos = { // must be equal than the commands
 					addDiv: addDiv_Undo,
 					applyMacro: applyMacro_Undo,
-					moveTo: moveTo_Undo
+					moveTo: moveTo_Undo,
+					decorate: decorate_undo
 				};
 				function execute(command, options){ // this is also a facade
 					if(!commands[command]) return;
@@ -236,6 +257,17 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 			//
 			if(!subscribed) ({}).subscribe("moveDiv", function (options){
 				commandPattern.execute("moveTo", options);
+			});
+			//
+			if(!subscribed) ({}).subscribe("decorate", function (options){
+				for decorations in macro
+					for divs in modifiyingPanel
+						do decorate
+					commandPattern.execute("decorate", options);
+				});
+			//
+			if(!subscribed) ({}).subscribe("saveRECstep", function (options){
+				commandPattern.execute("saveRECstep", options);
 			});
 			//
 			subscribed = true;
