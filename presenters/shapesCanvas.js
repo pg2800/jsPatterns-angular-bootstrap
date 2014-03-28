@@ -149,8 +149,6 @@ angular.module("ShapesCanvasModule", [/*dependencies*/])
 					stroke = getStrokeColor(),
 					fill = getFillColor();
 
-					console.log(x + " " +y);
-
 					shapesAbstractFactory.newPolygon(x, y, z_index++, size, shape, stroke, fill);
 					publish("renderCanvas");
 				}

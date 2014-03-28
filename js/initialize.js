@@ -148,7 +148,6 @@
 			publish("canvasMouseUp", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.srcEvent});
 		}
 		function canvasDblClickHandler(e){
-			// console.log(e);
 			publish("canvasDblClick", {context:$("canvas#theCanvasJSShadow")[0], e:e.gesture.srcEvent});
 		}
 		function removeHandler(){
@@ -197,8 +196,7 @@
 		publish("dragging", {
 			event: e,
 			targetID: $(e.target).attr("id"),
-			selectedPanel: this,
-			parent: $(e.target).parent()
+			selectedPanel: this
 		});
 	}
 	function dragend(e){
@@ -219,15 +217,56 @@
 			publish("undo");
 		}          
 	}
-	function release(e){
+	function releaseColor(e){
 		var obj = {};
 		obj.name = $(e.target).attr("name");
-		obj.val = $(e.target).val();
+		obj.val = "#" + $(e.target).val();
+		publish("RECstep", obj);
+		publish("decorate", obj);
+	}
+	function releasePixel(e){
+		var obj = {};
+		obj.name = $(e.target).attr("name");
+		obj.val = $(e.target).val() + "px";
 		publish("RECstep", obj);
 		publish("decorate", obj);
 	}
 
+	var recording = false;
+	function stopRecroding(){
+		$(this).addClass("btn-info");
+		$(this).removeClass("btn-danger");
+		$(this).removeClass("active");
+		recording = false;
+		publish("recording", {r: recording});
+	}
+	function startRecroding(){
+		$(this).removeClass("btn-info");
+		$(this).addClass("btn-danger");
+		$(this).addClass("active");
+		recording = true;
+		publish("recording", {r: recording});
+	}
+	function record(e){
+		if(!recording){
+			startRecroding.apply(this);
+		} else {
+			stopRecroding.apply(this);
+		}
+	}
+	function discard(e){
+		publish("discardMacro");
+		stopRecroding.apply(document.getElementById("REC"));
+	}
+	function save(e){
+		publish("saveMacro");
+		stopRecroding.apply(document.getElementById("REC"));
+	}
+
 	({}).subscribe("historyStack", function (){
+		$("#REC").on("click", record);
+		$("#DISCARD").on("click", discard);
+		$("#SAVE").on("click", save);
 		$(".pick-a-color").pickAColor({
 			showSpectrum            : true,
 			showSavedColors         : true,
@@ -252,54 +291,11 @@
 		Hammer(wrapper).on("drag", drag);
 		Hammer(wrapper).on("dragend", dragend);
 
-		$("#background-color input").on("change", release);
-		$("#border-color input").on("change", release);
-		$('#border-thickness').slider().on("slideStop", release);
-		$('#round-edges').slider().on("slideStop", release);
+		$("#background-color input").on("change", releaseColor);
+		$("#border-color input").on("change", releaseColor);
+		$('#border-thickness').slider().on("slideStop", releasePixel);
+		$('#round-edges').slider().on("slideStop", releasePixel);
 
-		(function OtherImplementationOfTheDraggable(){
-			// w3schools
-			// jQuery.event.props.push ('dataTransfer');
-			// $("#id").on("drop", drop);
-			// $("#id").on("dragover", allowDrop);
-			// function allowDrop(ev)
-			// {
-			// 	ev.preventDefault();
-			// }
-			// function drop(ev)
-			// {
-			// 	ev.preventDefault();
-			// 	var data = ev.dataTransfer.getData("Text");
-			// 	ev.target.appendChild(document.getElementById(data));
-			// }
-			// // We need to add this one to the element we want to drag
-			// // Also that element must have an attribute draggable="true"
-			// function drag(ev)
-			// {
-			// 	ev.dataTransfer.setData("Text",ev.target.id);
-			// }
-
-			// Ivans Code:
-			// jQuery.event.props.push ('dataTransfer');
-			// angular.module ('main', [])
-			// .value ('dragFn', function (ev) {
-			// 	ev.dataTransfer.setData("Text", ev.target.id);
-			// })
-			// .controller('mainCtrl', function () {
-
-			// })
-			// .directive('dragMe', function (dragFn) {
-			// 	return {
-			// 		restrict: 'A',
-			// 		link: function (scope, el, attr) {
-			// 			el.prop ('draggable', true);
-
-			// 			el.on ('dragstart', dragFn);
-			// 		}
-			// 	}
-			// });
-			//
-		})();
 
 	});
 

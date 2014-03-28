@@ -31,11 +31,12 @@
 				</div>
 				<div class="form-group row">
 					<label for="border-thickness" class="col-sm-6 col-xs-6">Border Thickness</label>
-					<input id="border-thickness" value="5" name="border-thickness" class="slider form-control col-sm-6 col-xs-6">
+					<input id="border-thickness" value="5" name="border-width" class="slider form-control col-sm-6 col-xs-6">
 				</div>
+				<br>
 				<div class="form-group row">
 					<label for="round-edges" class="col-sm-6 col-xs-6">Round Edges</label>
-					<input id="round-edges" value="5" name="round-edges" class="slider form-control col-sm-6 col-xs-6">
+					<input id="round-edges" value="5" name="border-radius" class="slider form-control col-sm-6 col-xs-6">
 				</div>
 			</div>
 		</div>
@@ -44,35 +45,31 @@
 				<h3 class="panel-title">Macros</h3>
 			</div>
 			<div class="panel-body">
-				<a href="#" class="btn btn-info"><span class="glyphicon glyphicon-record"></span> REC</a>
-				<a href="#" class="btn btn-warning"><span class="glyphicon glyphicon-remove-circle"></span> DISCARD</a>
+				<a id="REC"  class="btn btn-info"><span class="glyphicon glyphicon-record"></span> REC</a>
+				<a id="DISCARD" class="btn btn-warning"><span class="glyphicon glyphicon-remove-circle"></span> DISCARD</a>
 				
 				<div class="btn-group">
-					<button type="button" class="btn btn-success"><span class="glyphicon glyphicon-ok-sign"></span> SAVE</button>
-					<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+					<button id="SAVE" type="button" class="btn btn-success"><span class="glyphicon glyphicon-ok-sign"></span> SAVE</button>
+					<button id="APPLY" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
 						APPLY
 						<span class="caret"></span>
 						<span class="sr-only">Toggle Dropdown</span>
 					</button>
-					<ul class="dropdown-menu text-center" role="menu">
+					<ul id="MACRO_BUTTONS" class="dropdown-menu text-center" role="menu">
 						<li>
 							<div class="btn-group">
-								<button type="button" class="btn btn-default">
-									Macro 1
+								<button data-macroID="-1" type="button" class="btn btn-default">
+									Current
 								</button>
-								<button type="button" class="btn btn-denger">
+<!-- 						<button type="button" class="btn btn-danger">
 									<span class="glyphicon glyphicon-remove-sign"></span>
-								</button>
+								</button> -->
 							</div>
 						</li>
-						<li><a href="#">Another action</a></li>
-						<li><a href="#">Something else here</a></li>
-						<li class="divider"></li>
-						<li><a href="#">Separated link</a></li>
 					</ul>
 				</div>
 				<!-- <a href="#" class="btn btn-success"><span class="glyphicon glyphicon-plus-sign"></span> SAVE</a> -->
-				<a href="#" class="btn btn-danger"><span class="glyphicon glyphicon-remove-sign"></span> REMOVE</a>
+				<!-- <a href="#" class="btn btn-danger"><span class="glyphicon glyphicon-remove-sign"></span> REMOVE</a> -->
 			</div>
 		</div>
 	</div> <!-- col-sm-4 -->
