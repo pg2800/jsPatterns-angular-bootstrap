@@ -180,8 +180,8 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 				if(!macro) return;
 				macro.forEach(function (step){
 					publish("decorate", {
-						name: step.property,
-						val: step.value
+						name: step.name,
+						val: step.val
 					});
 				});
 			});
@@ -390,7 +390,6 @@ angular.module("HistoryStackModule", [/*dependencies*/])
 				divs.each(function (div){
 					div = divs[div];
 					options.element = $(div).attr("id");
-					console.log(options);
 					commandPattern.execute("decorate", {
 						element: options.element,
 						name: options.name,
